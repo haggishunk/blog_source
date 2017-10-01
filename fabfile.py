@@ -5,7 +5,7 @@ import shutil
 import sys
 import SocketServer
 
-from pelican.server import ComplexHTTPRequestHandler
+#from pelican.server import ComplexHTTPRequestHandler
 
 # Local path configuration (can be absolute or relative to fabfile)
 env.deploy_path = 'output'
@@ -14,6 +14,9 @@ DEPLOY_PATH = env.deploy_path
 # Remote server configuration
 production = 'root@localhost:22'
 dest_path = '/var/www'
+
+# Amazon S3 config settings
+s3bucket = "blog.pantageo.us"
 
 # Rackspace Cloud Files configuration settings
 env.cloudfiles_username = 'my_rackspace_username'
@@ -85,6 +88,13 @@ def publish():
         delete=True,
         extra_opts='-c',
     )
+
+def publish_s3cmd():
+    """Publish to Amazon s3 via s3cmd"""
+    options = ["acl-public", "delete-removed"]
+    opt_string = ' '.join(['--%s' % o for o in options])
+    command_string = "s3cmd %s sync %s/* s3://%s" % (opt_string, DEPLOY_PATH, s3bucket)
+    local(command_string)
 
 def gh_pages():
     """Publish to GitHub Pages"""
