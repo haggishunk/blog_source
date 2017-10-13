@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content=" Posts tagged with automation" />
+    <meta name="description" content="" />
     <meta name="author" content="Travis Mattera" />
     <meta name="generator" content="Pelican (VoidyBootstrap theme)" />
 
-    <title>Tag:automation - Pillow Talk</title>
+    <title>Deploying My Very Own PaaS - Pillow Talk</title>
 
    
         <link rel="stylesheet"
@@ -67,13 +67,8 @@
 
     <div class="container" id="main-container">
         <div class="" id="content">
-<ol class="breadcrumb">
-    <li><a href="http://blog.pantageo.us/" title="Home" rel="home">
-		<i class="fa fa-home fa-fw fa-lg"></i> </a></li>
-    <li>Tags </li>
-    <li class="active">automation</li>
-</ol>
-    <article>
+<article itemscope="itemscope" itemtype="http://schema.org/BlogPosting">
+  <header class="article-header">
 <abbr class="article-header-date">
   Sun 08 October 2017
 </abbr> <h1>
@@ -89,9 +84,9 @@
       blog</a>
     &nbsp;&nbsp;
   </p>
-</div> <!-- /.article-header-info -->
-      <div class="summary">
-		<p>Tonight I can sleep soundly knowing that a very special little application is running out there on a virtual machine.  Check it out at <a href="http://helloclock.mypaas.pantageo.us">helloclock.mypaas.pantageo.us</a>.  I will admit it&#8217;s not the most awesome thing ever, but if for some reason you cannot trust any of your timepieces yet you happen to have a browser (or <a href="https://curl.haxx.se">curl</a>) this little ruby-on-rails app will let you know just how late you&nbsp;are.</p>
+</div> <!-- /.article-header-info -->  </header>
+  <div class="content-body" itemprop="text articleBody">
+	<p>Tonight I can sleep soundly knowing that a very special little application is running out there on a virtual machine.  Check it out at <a href="http://helloclock.mypaas.pantageo.us">helloclock.mypaas.pantageo.us</a>.  I will admit it&#8217;s not the most awesome thing ever, but if for some reason you cannot trust any of your timepieces yet you happen to have a browser (or <a href="https://curl.haxx.se">curl</a>) this little ruby-on-rails app will let you know just how late you&nbsp;are.</p>
 <p>Under the hood I have <a href="https://www.terraform.io">terraform</a> spinning up a droplet (<span class="caps">VM</span> instance) on DigitalOcean and registering a <span class="caps">DNS</span> alias under GoogleCloud pointing to that machine.  Terraform also installs <a href="https://github.com/dokku/dokku">Dokku</a> which is an open source PaaS tool.  Visit my github repo <a href="https://github.com/haggishunk/proj_mypaas">haggishunk/proj_mypaas</a> for more&nbsp;details.</p>
 <p>Here&#8217;s one of the terraform <code>.tf</code> files that handles the virtual machine&nbsp;creation:</p>
 <div class="highlight"><pre><span></span># digital ocean provider data cached in env variables
@@ -126,82 +121,70 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
                   &quot;dokku apps:create <span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">appname</span><span class="cp">}</span>&quot;,
                   &quot;dokku plugin:install https://github.com/dokku/dokku-postgres.git&quot;,
                   &quot;dokku postgres:create rails-database&quot;,
-                  &quot;dokku postgres:link rails-database <span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">appname …</span></pre></div>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/deploying-my-very-own-paas.html">
-			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
-		</a></p>
-      </div>    </article>
-    <hr />
-    <article>
-<abbr class="article-header-date">
-  Sun 01 October 2017
-</abbr> <h1>
-  <a href="http://blog.pantageo.us/forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html" rel="bookmark"
-     title="Permalink to Forking a Cookbook with a Knife (Overextending a Culinary Metaphor)">
-    Forking a Cookbook with a Knife (Overextending a Culinary&nbsp;Metaphor)
-  </a>
-</h1><div class="article-header-info">
-  <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
-    in 
-    <a href="http://blog.pantageo.us/category/blog.html">
-      blog</a>
-    &nbsp;&nbsp;
-  </p>
-</div> <!-- /.article-header-info -->
-      <div class="summary">
-		<p>Today I started using Chef, specifically <code>chef-solo</code>, to stand up an Apache server, and after some config file changes, swap it out for an Nginx server.  Part of the experiment here was that I wrote a custom <code>index.html</code> landing page and used a chef recipe to link that file into each server&#8217;s content root.  Switching servers had no visible difference for the casual user.  This decouples the application from the content, which I&#8217;m learning is a good&nbsp;practice.</p>
-<p>I also explored using the <code>knife</code> command which is bundled with the Chef suite.  I&#8217;ve heard some deriding the use of <code>knife</code> to fiddle with individual machines&#8217; runtime environs but in my research it turns out to be a great way to <a href="https://docs.chef.io/knife_cookbook_site.html">grab community cookbooks</a> from the Chef&nbsp;Supermarket.</p>
-<p>I used the following command to grab the&nbsp;tarball:</p>
-<p><code>knife cookbook site download nginx -f nginx_cookbook.tgz</code></p>
-<p>From there you simply extract into your cookbook directory and go forth calling it out in your&nbsp;recipes.</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html">
-			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
-		</a></p>
-      </div>    </article>
-    <hr />
-    <article>
-<abbr class="article-header-date">
-  Sat 30 September 2017
-</abbr> <h1>
-  <a href="http://blog.pantageo.us/fabric-with-s3cmd.html" rel="bookmark"
-     title="Permalink to Fabric with s3cmd">
-    Fabric with&nbsp;s3cmd
-  </a>
-</h1><div class="article-header-info">
-  <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
-    in 
-    <a href="http://blog.pantageo.us/category/blog.html">
-      blog</a>
-    &nbsp;&nbsp;
-  </p>
-</div> <!-- /.article-header-info -->
-      <div class="summary">
-		<p>I use s3cmd to publish my static blog to my Amazon S3 bucket.  <a href="http://docs.getpelican.com/en/stable/publish.html">Pelican docs</a> suggest using <a href="http://docs.fabfile.org/en/1.13/index.html">Fabric</a> as a publishing engine as it is written in python&#8230; and since you probably use Pelican because <em>it&#8217;s</em> written in python&#8230; well you see the&nbsp;allure.</p>
-<p>Pelican&#8217;s <code>pelican-quickstart</code> command writes a pre-fabbed <code>fabfile.py</code> in your root blog directory but I noticed only swift (for Rackspace Cloud), rsync and github support.  So I tried putting in a little tweak for&nbsp;s3cmd:</p>
-<div class="highlight"><pre><span></span><span class="err">#</span> <span class="nx">Amazon</span> <span class="nx">S3</span> <span class="nx">config</span> <span class="nx">settings</span>
-<span class="n">s3bucket</span><span class="o"> =</span> <span class="s2">&quot;blog.pantageo.us&quot;</span>      
+                  &quot;dokku postgres:link rails-database <span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">appname</span><span class="cp">}</span>&quot;]
+        connection {
+            type = &quot;ssh&quot;
+            user = &quot;root&quot;
+            private_key = &quot;<span class="cp">${</span><span class="nb">file</span><span class="p">(</span><span class="s2">&quot;~/.ssh/id_rsa&quot;</span><span class="p">)</span><span class="cp">}</span>&quot;
+        }
+    }
+}
 
-<span class="nx">def</span> <span class="nx">publish_s3cmd</span><span class="p">():</span>
-    <span class="s2">&quot;&quot;&quot;Publish to Amazon s3 via s3cmd&quot;&quot;&quot;</span>
-    <span class="n">options</span><span class="o"> =</span> <span class="err">[</span><span class="s2">&quot;acl-public&quot;</span><span class="p">,</span> <span class="s2">&quot;delete-removed&quot;</span><span class="cp">]</span><span class="x"></span>
-<span class="x">    opt_string = &#39; &#39;.join(</span><span class="cp">[</span><span class="s1">&#39;--%s&#39;</span> <span class="o">%</span> <span class="nx">o</span> <span class="nx">for</span> <span class="n">o</span> <span class="k">in</span> <span class="nx">options</span><span class="cp">]</span><span class="x">)</span>
-<span class="x">    command_string = &quot;s3cmd %s sync %s/* s3://%s&quot; % (opt_string, DEPLOY_PATH, s3bucket)</span>
-<span class="x">    local(command_string)</span>
+output &quot;msg_hosts&quot; {
+    value = &quot;Your are ready to go! Your dokku host is: <span class="cp">${</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="n">digitalocean_droplet</span><span class="o">.</span><span class="n">dokku</span><span class="o">.*.</span><span class="n">ipv4_address</span><span class="p">)</span><span class="cp">}</span>&quot;
+}
+
+output &quot;msg_apps&quot; {
+    value = &quot;Your first application is deployed at: <span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">appname</span><span class="cp">}</span>.mypaas.<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">domain</span><span class="cp">}</span>&quot;
+}
 </pre></div>
 
 
-<p>And it works!  I love&nbsp;python.</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/fabric-with-s3cmd.html">
-			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
-		</a></p>
-      </div>    </article>
-    <hr />
+<p>Separate files store the variables referenced above and direct the Google Cloud <span class="caps">DNS</span> effort, which includes a wildcard &#8216;A&#8217; record so the various apps that get deployed can reverse proxy through nginx on the dokku&nbsp;host.</p>
+<p>You&#8217;ll also notice a <code>bootstrap.sh</code> file gets pulled from github and run out on that remote machine.  Let me include that as well since the version I found on the official dokku github account didn&#8217;t work for&nbsp;me.</p>
+<div class="highlight"><pre><span></span># install prerequisites
+apt-get update -qq &gt; /dev/null
+apt-get install -qq -y apt-transport-https
 
-<nav class="index-pager">
+# install docker
+wget -nv -O - https://get.docker.com/ | sh
 
-</nav> <!-- /index-pager -->
+# install dokku
+wget -nv -O - https://packagecloud.io/gpg.key | apt-key add -
+echo &quot;deb https://packagecloud.io/dokku/dokku/ubuntu/ trusty main&quot; | tee /etc/apt/sources.list.d/dokku.list
+apt-get update -qq &gt; /dev/null
+
+echo &quot;dokku dokku/web_config boolean false&quot; | debconf-set-selections
+echo &quot;dokku dokku/vhost_enable boolean true&quot; | debconf-set-selections
+echo &quot;dokku dokku/key_file string /root/.ssh/id_rsa.pub&quot; | debconf-set-selections
+# ***EDIT THE hostname string BELOW WITH YOUR DOMAIN NAME***
+echo &quot;dokku dokku/hostname string mypaas.pantageo.us&quot; | debconf-set-selections
+
+apt-get install -qq -y --allow-unauthenticated dokku
+dokku plugin:install-dependencies --core
+</pre></div>
+
+
+<p>I wasn&#8217;t able to get a solid app pushed via terraform&#8217;s <code>local-exec</code>, so I ran this script locally afterwards which essentially uploads the app via git.  Dokku processes the push into the app container, re-establishes the postgres db link and it&#8217;s ready for&nbsp;viewing.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/bash</span>
+
+git clone git@github.com:heroku/ruby-rails-sample.git
+<span class="nb">cd</span> ruby-rails-sample
+git remote add dokku dokku@mypaas.pantageo.us:helloclock
+git push dokku master
+</pre></div>
+</td></tr></table>
+
+<p>The next iteration on this project will be to spin up several droplets, set them to have different roles, and tie them together as one unified&nbsp;front.</p>
+  </div>
+  
+
+</article>
         </div><!-- /content -->
 
     </div><!--/.container /#main-container -->

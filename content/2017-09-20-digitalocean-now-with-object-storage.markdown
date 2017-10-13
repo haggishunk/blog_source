@@ -4,7 +4,9 @@ Tags:
 Category: blog
 
 
-[DigitalOcean](https://www.digitalocean.com), who offers a nice bit of cloud deployment options, has stepped up with an [object storage](https://www.digitalocean.com/community/tutorials/object-storage-vs-block-storage-services) solution of their own.  Highlights include:
+[DigitalOcean](https://www.digitalocean.com), who offers a nice bit of cloud deployment options, has stepped up with an [object storage](https://www.digitalocean.com/community/tutorials/object-storage-vs-block-storage-services) solution of their own: [*Spaces*](https://blog.digitalocean.com/introducing-spaces-object-storage/).
+
+Highlights include:
 
 * s3cmd management tool compatible (ala Amazon AWS S3)
 * 256bit AES-XTS encryption

@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content=" Posts tagged with python" />
+    <meta name="description" content=" Posts tagged with dokku" />
     <meta name="author" content="Travis Mattera" />
     <meta name="generator" content="Pelican (VoidyBootstrap theme)" />
 
-    <title>Tag:python - Pillow Talk</title>
+    <title>Tag:dokku - Pillow Talk</title>
 
    
         <link rel="stylesheet"
@@ -71,15 +71,15 @@
     <li><a href="http://blog.pantageo.us/" title="Home" rel="home">
 		<i class="fa fa-home fa-fw fa-lg"></i> </a></li>
     <li>Tags </li>
-    <li class="active">python</li>
+    <li class="active">dokku</li>
 </ol>
     <article>
 <abbr class="article-header-date">
-  Sat 30 September 2017
+  Sun 08 October 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/fabric-with-s3cmd.html" rel="bookmark"
-     title="Permalink to Fabric with s3cmd">
-    Fabric with&nbsp;s3cmd
+  <a href="http://blog.pantageo.us/deploying-my-very-own-paas.html" rel="bookmark"
+     title="Permalink to Deploying My Very Own PaaS">
+    Deploying My Very Own&nbsp;PaaS
   </a>
 </h1><div class="article-header-info">
   <p>
@@ -91,22 +91,43 @@
   </p>
 </div> <!-- /.article-header-info -->
       <div class="summary">
-		<p>I use s3cmd to publish my static blog to my Amazon S3 bucket.  <a href="http://docs.getpelican.com/en/stable/publish.html">Pelican docs</a> suggest using <a href="http://docs.fabfile.org/en/1.13/index.html">Fabric</a> as a publishing engine as it is written in python&#8230; and since you probably use Pelican because <em>it&#8217;s</em> written in python&#8230; well you see the&nbsp;allure.</p>
-<p>Pelican&#8217;s <code>pelican-quickstart</code> command writes a pre-fabbed <code>fabfile.py</code> in your root blog directory but I noticed only swift (for Rackspace Cloud), rsync and github support.  So I tried putting in a little tweak for&nbsp;s3cmd:</p>
-<div class="highlight"><pre><span></span><span class="err">#</span> <span class="nx">Amazon</span> <span class="nx">S3</span> <span class="nx">config</span> <span class="nx">settings</span>
-<span class="n">s3bucket</span><span class="o"> =</span> <span class="s2">&quot;blog.pantageo.us&quot;</span>      
+		<p>Tonight I can sleep soundly knowing that a very special little application is running out there on a virtual machine.  Check it out at <a href="http://helloclock.mypaas.pantageo.us">helloclock.mypaas.pantageo.us</a>.  I will admit it&#8217;s not the most awesome thing ever, but if for some reason you cannot trust any of your timepieces yet you happen to have a browser (or <a href="https://curl.haxx.se">curl</a>) this little ruby-on-rails app will let you know just how late you&nbsp;are.</p>
+<p>Under the hood I have <a href="https://www.terraform.io">terraform</a> spinning up a droplet (<span class="caps">VM</span> instance) on DigitalOcean and registering a <span class="caps">DNS</span> alias under GoogleCloud pointing to that machine.  Terraform also installs <a href="https://github.com/dokku/dokku">Dokku</a> which is an open source PaaS tool.  Visit my github repo <a href="https://github.com/haggishunk/proj_mypaas">haggishunk/proj_mypaas</a> for more&nbsp;details.</p>
+<p>Here&#8217;s one of the terraform <code>.tf</code> files that handles the virtual machine&nbsp;creation:</p>
+<div class="highlight"><pre><span></span># digital ocean provider data cached in env variables
+provider &quot;digitalocean&quot; {}
 
-<span class="nx">def</span> <span class="nx">publish_s3cmd</span><span class="p">():</span>
-    <span class="s2">&quot;&quot;&quot;Publish to Amazon s3 via s3cmd&quot;&quot;&quot;</span>
-    <span class="n">options</span><span class="o"> =</span> <span class="err">[</span><span class="s2">&quot;acl-public&quot;</span><span class="p">,</span> <span class="s2">&quot;delete-removed&quot;</span><span class="cp">]</span><span class="x"></span>
-<span class="x">    opt_string = &#39; &#39;.join(</span><span class="cp">[</span><span class="s1">&#39;--%s&#39;</span> <span class="o">%</span> <span class="nx">o</span> <span class="nx">for</span> <span class="n">o</span> <span class="k">in</span> <span class="nx">options</span><span class="cp">]</span><span class="x">)</span>
-<span class="x">    command_string = &quot;s3cmd %s sync %s/* s3://%s&quot; % (opt_string, DEPLOY_PATH, s3bucket)</span>
-<span class="x">    local(command_string)</span>
-</pre></div>
+resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
+    image = &quot;debian-9-x64&quot;
+    count = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">instances</span><span class="cp">}</span>&quot;
+    name = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">prefix</span><span class="cp">}</span>-<span class="cp">${</span><span class="n">count</span><span class="o">.</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="cp">}</span>&quot;
+    region = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">do_region</span><span class="cp">}</span>&quot;
+    size = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">size</span><span class="cp">}</span>&quot;
+    backups = &quot;False&quot;
+    ipv6 = &quot;False&quot;
+    private_networking = &quot;False&quot;
+    ssh_keys = [&quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">ssh_id</span><span class="cp">}</span>&quot;]
 
+    # Place your SSH public key on the
+    # remote machine for dokku setup
+    provisioner &quot;file&quot; {
+        source = &quot;~/.ssh/id_rsa.pub&quot;
+        destination = &quot;/root/.ssh/id_rsa.pub&quot;
+        connection {
+            type = &quot;ssh&quot;
+            user = &quot;root&quot;
+            private_key = &quot;<span class="cp">${</span><span class="nb">file</span><span class="p">(</span><span class="s2">&quot;~/.ssh/id_rsa&quot;</span><span class="p">)</span><span class="cp">}</span>&quot;
+        }
+    }
 
-<p>And it works!  I love&nbsp;python.</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/fabric-with-s3cmd.html">
+    # Update your remote VM and install dokku
+    provisioner &quot;remote-exec&quot; {
+        inline = [&quot;wget -nv -O - https://raw.githubusercontent.com/haggishunk/proj_mypaas/master/bootstrap.sh | bash&quot;,
+                  &quot;dokku apps:create <span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">appname</span><span class="cp">}</span>&quot;,
+                  &quot;dokku plugin:install https://github.com/dokku/dokku-postgres.git&quot;,
+                  &quot;dokku postgres:create rails-database&quot;,
+                  &quot;dokku postgres:link rails-database <span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">appname …</span></pre></div>
+		<p class="content-emphasis"><a href="http://blog.pantageo.us/deploying-my-very-own-paas.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>

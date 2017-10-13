@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = 'Travis Mattera'
 SITENAME = 'Pillow Talk'
-SITEURL = 'http://www.pantageo.us'
+SITEURL = 'http://blog.pantageo.us'
 SITESUBTITLE = 'Daily meanderings and musings on building castles in the cloud'
 LANDING_PAGE_ABOUT = 'hmm'
 PATH = 'content'
@@ -15,7 +15,7 @@ DEFAULT_LANG = 'en'
 
 THEME = 'voidy-bootstrap'
 TYPOGRIFY = True
-SUMMARY_MAX_LENGTH = 150
+SUMMARY_MAX_LENGTH = 250
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None

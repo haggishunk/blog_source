@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="" />
+    <meta name="description" content=" Posts tagged with knife" />
     <meta name="author" content="Travis Mattera" />
     <meta name="generator" content="Pelican (VoidyBootstrap theme)" />
 
-    <title>Categories - Pillow Talk</title>
+    <title>Tag:knife - Pillow Talk</title>
 
    
         <link rel="stylesheet"
@@ -67,10 +67,44 @@
 
     <div class="container" id="main-container">
         <div class="" id="content">
-<h1 class="direct-heading"><i class="fa fa-folder fa-fw fa-lg"></i> Categories</h1>
-<ul class="direct-list">
-	<li><a href="http://blog.pantageo.us/category/blog.html">blog</a></li>
-</ul>
+<ol class="breadcrumb">
+    <li><a href="http://blog.pantageo.us/" title="Home" rel="home">
+		<i class="fa fa-home fa-fw fa-lg"></i> </a></li>
+    <li>Tags </li>
+    <li class="active">knife</li>
+</ol>
+    <article>
+<abbr class="article-header-date">
+  Sun 01 October 2017
+</abbr> <h1>
+  <a href="http://blog.pantageo.us/forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html" rel="bookmark"
+     title="Permalink to Forking a Cookbook with a Knife (Overextending a Culinary Metaphor)">
+    Forking a Cookbook with a Knife (Overextending a Culinary&nbsp;Metaphor)
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="http://blog.pantageo.us/category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>Today I started using Chef, specifically <code>chef-solo</code>, to stand up an Apache server, and after some config file changes, swap it out for an Nginx server.  Part of the experiment here was that I wrote a custom <code>index.html</code> landing page and used a chef recipe to link that file into each server&#8217;s content root.  Switching servers had no visible difference for the casual user.  This decouples the application from the content, which I&#8217;m learning is a good&nbsp;practice.</p>
+<p>I also explored using the <code>knife</code> command which is bundled with the Chef suite.  I&#8217;ve heard some deriding the use of <code>knife</code> to fiddle with individual machines&#8217; runtime environs but in my research it turns out to be a great way to <a href="https://docs.chef.io/knife_cookbook_site.html">grab community cookbooks</a> from the Chef&nbsp;Supermarket.</p>
+<p>I used the following command to grab the&nbsp;tarball:</p>
+<p><code>knife cookbook site download nginx -f nginx_cookbook.tgz</code></p>
+<p>From there you simply extract into your cookbook directory and go forth calling it out in your&nbsp;recipes.</p>
+		<p class="content-emphasis"><a href="http://blog.pantageo.us/forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
+
+<nav class="index-pager">
+
+</nav> <!-- /index-pager -->
         </div><!-- /content -->
 
     </div><!--/.container /#main-container -->
