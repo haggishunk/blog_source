@@ -7,12 +7,11 @@ python:
 install:
 - pip install -r requirements.txt
 script:
-- make html
+- fab build
 notifications:
   email:
     on_success: always
     on_failure: always
 env:
   global:
-  - secure:
-            
+  - secure: b8QpQNiQqDXbHrzALh3fMOGrLrAcuDqe4pnCmGPfCcsujptE4C++Al0tFL2clU9WYtzGvQNLGakkgYNL0DQC9TY8uijU97luo1iGFpZ8OQSACLhmpX4dCSLQiGbVfvYkK8HXFkLEp5heJm2A5s/g2b0Cn/lgT5xjCNbAzxWElAYvh/4ruikQBXK6v25o8jW/QoAc/834ofI3LGh24gCGi3XL0tjrx2pbzqGPoupasc4ZmJwegYLEWN2OsAEki4kPQordM/W5pDKEdYciYXneu990EmlILvrPNG9YJKPdujXVFAiaCS6nsgdv5q6pOyeT8gr99U8iic9yGX9phqd09wwoj/42qQBbfyc8tvA9MBCuj0FOZMrFh/2fvbPJYR4lPVyfVHYlI7XLt7XeSi5bWRE2gpvheTqfK4J1PAK4fz1Jud7SREoQ6xtbf+VUUpJDX5MYpgNBIL/MRFxFREgtrZ7o7tRYpdyyFuHZAWwD05YyPcwF921cW5chcanWzCeD2XZu7Lh2m1i1Fnyi5n9ZGxyZfhDiv41bTsNSzc8+lj31oxQ8HrcefPtEPctVcNTHFHEOjH60tMZ3QvdAaEnzWNL5ro/MKbLSFwplnCbjx7cT7+dhEi6hF11uUjt2FUUY4Eag61Ylz+xekMQUWwyungdKBW/g70pknrCYJLY1UIk=
