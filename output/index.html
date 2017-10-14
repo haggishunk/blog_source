@@ -69,6 +69,35 @@
         <div class="" id="content">
     <article>
 <abbr class="article-header-date">
+  Fri 13 October 2017
+</abbr> <h1>
+  <a href="http://blog.pantageo.us/ssl-encryption-for-my-paas.html" rel="bookmark"
+     title="Permalink to SSL Encryption for My PaaS">
+    <span class="caps">SSL</span> Encryption for My&nbsp;PaaS
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="http://blog.pantageo.us/category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->  
+      <div class="summary">
+		<p>Getting your site and application equipped with <span class="caps">SSL</span> encryption and authentication is a basic requirement these days.  It can, however, be troublesome to get it implemented.  And it&#8217;s easy to be conned into paying for a <span class="caps">CA</span>-signed&nbsp;cert.</p>
+<p>Enter <a href="https://letsencrypt.org/">Let&#8217;s Encrypt</a>.  <span class="caps">LE</span> is an open certificate authority (<span class="caps">CA</span>) that is for the people, complements of the Internet Security Research Group.  Their forte is automated certificate issuance and renewal.  There are a plethora of <a href="https://ietf-wg-acme.github.io/acme/draft-ietf-acme-acme.html"><span class="caps">ACME</span></a>-compliant avenues by which to grab yourself (or more accurately, your domain) a&nbsp;cert.</p>
+<p>Today I opted for one of the web browser options, <a href="https://gethttpsforfree.com/">https://gethttpsforfree.com/</a>.  After a good bit of cutting <span class="amp">&amp;</span> pasting command line action with <code>openssl</code>  I was presented with my signed certificate.  This was not a trivial process.  Even so, being involved in the exchange of information helped elucidate how the signing&nbsp;works.</p>
+<p>When I later tried to apply the certs to my <code>helloclock</code> app on my <a href="2017-10-08-deploying-my-own-paas.markdown">dokku host</a>, I discovered one of the probably more common problems with <span class="caps">SSL</span> certs:  getting the domain right.  At the time I though I might be getting what I now know would be considered a wildcard domain cert (available through Let&#8217;s Encrypt in <a href="https://letsencrypt.org/2017/07/06/wildcard-certificates-coming-jan-2018.html">2018</a>), what with associating <code>www.pantageo.us</code>.  But when I planted it inside my dokku app, I found there was indeed a domain&nbsp;mismatch.</p>
+<p>I didn&#8217;t want to go through that cumbersome manual browser procedure again&#8212; and Let&#8217;s Encrypt is all but hyping you to use …</p>
+		<p class="content-emphasis"><a href="http://blog.pantageo.us/ssl-encryption-for-my-paas.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+
+    <hr />
+    <article>
+<abbr class="article-header-date">
   Tue 10 October 2017
 </abbr> <h1>
   <a href="http://blog.pantageo.us/chaos-testing.html" rel="bookmark"
@@ -365,32 +394,6 @@ Internet</code></p>
 <li>2 month free&nbsp;trial</li>
 </ul>
 		<p class="content-emphasis"><a href="http://blog.pantageo.us/digitalocean-now-with-object-storage.html">
-			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
-		</a></p>
-      </div>    </article>
-
-    <hr />
-    <article>
-<abbr class="article-header-date">
-  Tue 19 September 2017
-</abbr> <h1>
-  <a href="http://blog.pantageo.us/qumulos-scalable-file-storage-extends-to-amazon-cloud.html" rel="bookmark"
-     title="Permalink to Qumulos Scalable File storage extends to Amazon cloud">
-    Qumulos Scalable File storage extends to Amazon&nbsp;cloud
-  </a>
-</h1><div class="article-header-info">
-  <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
-    in 
-    <a href="http://blog.pantageo.us/category/blog.html">
-      blog</a>
-    &nbsp;&nbsp;
-  </p>
-</div> <!-- /.article-header-info -->  
-      <div class="summary">
-		<p>No more will Qumulo clients be limited to running their file storage system in a single data center.  <a href="https://qumulo.com/decide/options/"><span class="caps">QF2</span> File Fabric</a> allows for a distributed system across private and public&nbsp;clouds.</p>
-<p>To my novice eye, object storage and file storage seem to have the same characteristics, but maybe that&#8217;s because of the APIs.  Thankfully there&#8217;s quite a bit of <a href="http://searchcloudstorage.techtarget.com/feature/How-an-object-store-differs-from-file-and-block-storage">info</a> out there on this very&nbsp;subject.</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/qumulos-scalable-file-storage-extends-to-amazon-cloud.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>

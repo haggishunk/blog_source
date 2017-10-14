@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="" />
+    <meta name="description" content=" Posts tagged with security" />
     <meta name="author" content="Travis Mattera" />
     <meta name="generator" content="Pelican (VoidyBootstrap theme)" />
 
-    <title>Authors - Pillow Talk</title>
+    <title>Tag:security - Pillow Talk</title>
 
    
         <link rel="stylesheet"
@@ -67,14 +67,44 @@
 
     <div class="container" id="main-container">
         <div class="" id="content">
-<h1 class="direct-heading"><i class="fa fa-user fa-fw fa-lg"></i>Authors</h1>
-<ul class="direct-list authors-author-list">
-<li>
-  <a href="http://blog.pantageo.us/author/travis-mattera.html">
-	<i class="fa fa-user fa-fw fa-lg"></i>Travis Mattera 
-  </a> (12)
-</li>
-</ul>
+<ol class="breadcrumb">
+    <li><a href="http://blog.pantageo.us/" title="Home" rel="home">
+		<i class="fa fa-home fa-fw fa-lg"></i> </a></li>
+    <li>Tags </li>
+    <li class="active">security</li>
+</ol>
+    <article>
+<abbr class="article-header-date">
+  Fri 13 October 2017
+</abbr> <h1>
+  <a href="http://blog.pantageo.us/ssl-encryption-for-my-paas.html" rel="bookmark"
+     title="Permalink to SSL Encryption for My PaaS">
+    <span class="caps">SSL</span> Encryption for My&nbsp;PaaS
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="http://blog.pantageo.us/category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>Getting your site and application equipped with <span class="caps">SSL</span> encryption and authentication is a basic requirement these days.  It can, however, be troublesome to get it implemented.  And it&#8217;s easy to be conned into paying for a <span class="caps">CA</span>-signed&nbsp;cert.</p>
+<p>Enter <a href="https://letsencrypt.org/">Let&#8217;s Encrypt</a>.  <span class="caps">LE</span> is an open certificate authority (<span class="caps">CA</span>) that is for the people, complements of the Internet Security Research Group.  Their forte is automated certificate issuance and renewal.  There are a plethora of <a href="https://ietf-wg-acme.github.io/acme/draft-ietf-acme-acme.html"><span class="caps">ACME</span></a>-compliant avenues by which to grab yourself (or more accurately, your domain) a&nbsp;cert.</p>
+<p>Today I opted for one of the web browser options, <a href="https://gethttpsforfree.com/">https://gethttpsforfree.com/</a>.  After a good bit of cutting <span class="amp">&amp;</span> pasting command line action with <code>openssl</code>  I was presented with my signed certificate.  This was not a trivial process.  Even so, being involved in the exchange of information helped elucidate how the signing&nbsp;works.</p>
+<p>When I later tried to apply the certs to my <code>helloclock</code> app on my <a href="2017-10-08-deploying-my-own-paas.markdown">dokku host</a>, I discovered one of the probably more common problems with <span class="caps">SSL</span> certs:  getting the domain right.  At the time I though I might be getting what I now know would be considered a wildcard domain cert (available through Let&#8217;s Encrypt in <a href="https://letsencrypt.org/2017/07/06/wildcard-certificates-coming-jan-2018.html">2018</a>), what with associating <code>www.pantageo.us</code>.  But when I planted it inside my dokku app, I found there was indeed a domain&nbsp;mismatch.</p>
+<p>I didn&#8217;t want to go through that cumbersome manual browser procedure again&#8212; and Let&#8217;s Encrypt is all but hyping you to use …</p>
+		<p class="content-emphasis"><a href="http://blog.pantageo.us/ssl-encryption-for-my-paas.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
+
+<nav class="index-pager">
+
+</nav> <!-- /index-pager -->
         </div><!-- /content -->
 
     </div><!--/.container /#main-container -->
