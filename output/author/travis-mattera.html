@@ -27,7 +27,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js" integrity="sha384-ZoaMbDF+4LeFxg6WdScQ9nnR1QC2MIRxA1O9KWEXQwns1G8UNyIEZIQidzb0T1fo" crossorigin="anonymous"></script>
     <![endif]-->
 
-    <link rel="shortcut icon" href="http://blog.pantageo.us/favicon.ico" />
+    <link rel="shortcut icon" href="../favicon.ico" />
   </head>
 
   <body>
@@ -42,7 +42,7 @@
 		  <span class="icon-bar"></span>
 		  <span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand" href="http://blog.pantageo.us/" rel="home">
+		<a class="navbar-brand" href="../" rel="home">
           <i class="fa fa-home fa-fw fa-lg"> </i> </a>
        </div>
 
@@ -50,7 +50,7 @@
         <ul class="nav navbar-nav">
             <li class="divider"></li>
             <li class="">
-              <a href="http://blog.pantageo.us/archives.html">Archives</a>
+              <a href="../archives.html">Archives</a>
             </li>
           <li class="divider"></li>
         </ul> <!-- /nav -->
@@ -60,7 +60,7 @@
 
 	<div class="jumbotron" id="overview">
 	  <div class="container">
-		<h1><a href="http://blog.pantageo.us/">Pillow Talk</a></h1>
+		<h1><a href="../">Pillow Talk</a></h1>
 		<p class="lead">Daily meanderings and musings on building castles in the cloud</p>
 	  </div>
 	</div>
@@ -68,24 +68,173 @@
     <div class="container" id="main-container">
         <div class="" id="content">
 <ol class="breadcrumb">
-    <li><a href="http://blog.pantageo.us/" title="Home" rel="home">
+    <li><a href="../" title="Home" rel="home">
 		<i class="fa fa-home fa-fw fa-lg"></i> </a></li>
     <li>Authors </li>
     <li class="active">Travis Mattera</li>
 </ol>
     <article>
 <abbr class="article-header-date">
+  Thu 11 January 2018
+</abbr> <h1>
+  <a href="../ceph-storage-cluster-on-digital-ocean-using-terraform-part-2.html" rel="bookmark"
+     title="Permalink to Ceph Storage Cluster on Digital Ocean Using Terraform (Part 2)">
+    Ceph Storage Cluster on Digital Ocean Using Terraform (Part&nbsp;2)
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="../category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>So that bit about me getting a Ceph cluster off the ground a couple weeks ago?  Well I managed to have forgotten quite a bit of the intricacies in those few weeks.  I&#8217;ll chalk it up the&nbsp;holidaze.</p>
+<p>Anyways, after two days of wrangling terraform code, troubleshooting hosts files and discovering how simple <span class="caps">SSH</span> public key comments mean more than maybe they should I&#8217;ve got some working code up on <a href="https://github.com/haggishunk/ceph-digitalocean">haggishunk/ceph-digitalocean</a>.</p>
+<p><strong>Some design decisions I&nbsp;made:</strong></p>
+<ol>
+<li>
+<p>Use <span class="caps">SSH</span> 7.3&#8217;s <code>Include</code> statement inside the <code>~/.ssh/config</code> file to link in host configuration from a separate file.  I chose this (a) to avoid tainting any config file you have and (b) to easily clean up between runs.  If you weren&#8217;t aware, <span class="caps">SSH</span> goes with the first host def in the config file so stale entries will have you hanging out in space or stranger still, trying to connect to someone else&#8217;s machine that got assigned your old <span class="caps">IP</span>.</p>
+</li>
+<li>
+<p>Create an admin node in Digital Ocean instead of using a local Ubuntu <span class="caps">VM</span>.  This added the convolution of having to generate an <span class="caps">SSH</span> keypair on that machine and distribute it to the other nodes; likewise with the <span class="caps">SSH</span> config file and the <code>/etc/hosts</code> file.  I found <code>scp -3</code> to be of use here which routes the secure copy through your local machine.  I feel this decision makes this project more portable, but I&#8217;d be delighted to discuss its virtues and&nbsp;drawbacks.</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span>scp -3 -o …</pre></div>
+		<p class="content-emphasis"><a href="../ceph-storage-cluster-on-digital-ocean-using-terraform-part-2.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
+    <article>
+<abbr class="article-header-date">
+  Tue 09 January 2018
+</abbr> <h1>
+  <a href="../ceph-storage-cluster-on-digital-ocean-using-terraform.html" rel="bookmark"
+     title="Permalink to Ceph Storage Cluster on Digital Ocean Using Terraform">
+    Ceph Storage Cluster on Digital Ocean Using&nbsp;Terraform
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="../category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>A couple weeks ago I got my first <a href="http://ceph.com">Ceph</a> storage cluster off the ground using the fantastic documentation on their website.  Today I sat down and fleshed out the infrastructure through another handy tool, <a href="https://www.terraform.io">Terraform</a>, from the same <a href="https://www.hashicorp.com">people</a> that brought you Vagrant.  My github <a href="https://github.com/haggishunk/ceph-digitalocean">repo</a> haggishunk/ceph-digitalocean is out there for any to examine <span class="amp">&amp;</span>&nbsp;experiment.</p>
+<p>What makes Ceph neat is that it&#8217;s open source <em>and</em> it features device, block and object storage on a cluster of heterogenous machines and&nbsp;volumes.</p>
+<p>In my hunt to automate the entire process I&#8217;ve so far got Terraform provisioning the droplets, connecting volumes, and setting up a ceph user account on each droplet node.  This accomplishes the <a href="http://docs.ceph.com/docs/master/start/quick-start-preflight/">pre-flight</a> steps outlined in Ceph&#8217;s docs for <code>ceph-deploy</code>.  The docs also cover using <code>ceph</code> as a study in how the system works and <code>helm</code> to streamline incorporation into a Kubernetes environment.  I for sure plan on getting to the helm method once I master&nbsp;ceph-deploy.</p>
+<p>Today went well and I learned a couple&nbsp;things:</p>
+<ul>
+<li>Got happiness using <code>self</code> inside a droplet provisioner to write host info into the <span class="caps">SSH</span> config files (see <code>"remote-exec"</code> below).</li>
+<li>Learned that ceph-deploy requires python2 installed on the cluster nodes.  Make sure to install it if using 16.04 <span class="caps">LTS</span>.</li>
+</ul>
+<p>Here&#8217;s the meat of the code from <code>instances.tf</code>:</p>
+<div class="highlight"><pre><span></span>resource &quot;digitalocean_droplet&quot; &quot;ceph&quot; {
+    image                   = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">image</span><span class="cp">}</span>&quot;
+    count                   = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">instances</span><span class="cp">}</span>&quot;
+    name                    = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">prefix</span><span class="cp">}</span>-<span class="cp">${</span><span class="n">count</span><span class="o">.</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="cp">}</span>&quot;
+    region                  = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">do_region</span><span class="cp">}</span>&quot;
+    size                    = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">size</span><span class="cp">}</span>&quot;
+    volume_ids              = [&quot;<span class="cp">${</span><span class="n">element</span><span class="p">(</span><span class="n">digitalocean_volume</span><span class="o">.</span><span class="n">ceph</span><span class="o">-</span><span class="n">vol</span><span class="o">.*.</span><span class="n">id</span><span class="p">,</span> <span class="n">count</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="cp">}</span>&quot;]
+    backups …</pre></div>
+		<p class="content-emphasis"><a href="../ceph-storage-cluster-on-digital-ocean-using-terraform.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
+    <article>
+<abbr class="article-header-date">
+  Wed 22 November 2017
+</abbr> <h1>
+  <a href="../business-cards.html" rel="bookmark"
+     title="Permalink to Business Cards">
+    Business&nbsp;Cards
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="../category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>Now that I&#8217;m finished with the <a href="https://be.a.cloudgeni.us" title="https://be.a.cloudgeni.us">Cloud Genius bootcamp</a> I&#8217;m furiously hunting for job prospects, going to various meetups, and schmoozing with movers and shakers.  And I&#8217;m heading to <a href="http://events.linuxfoundation.org/events/kubecon-and-cloudnativecon-north-america" title="http://events.linuxfoundation.org/events/kubecon-and-cloudnativecon-north-america">KubeCon 2017</a> in Austin, <span class="caps">TX</span> this here December.  All the more important to square away that basic necessity of networking:  <strong>business cards</strong>.</p>
+<p>I am going in with two goals in&nbsp;mind:</p>
+<ul>
+<li>Spend little time <span class="amp">&amp;</span>&nbsp;money</li>
+<li>Make a professional card that&#8217;s not too overblown or&nbsp;contrived</li>
+</ul>
+<p>I started with a basic google search for &#8220;business&nbsp;cards&#8221;.</p>
+<ul>
+<li><a href="https://www.vistaprint.com" title="https://www.vistaprint.com">Vistaprint</a>:  well known but reportedly low quality.  From a perusal of their site it&#8217;s clear business cards are just one of their many printed products.  $20 for 1000 basic&nbsp;cards.</li>
+<li><a href="https://www.zazzle.com" title="https://www.zazzle.com">Zazzle</a>:  wow.  Demo cards were very colorful and vibrant.  I&#8217;m getting a strong &#8216;fancy&#8217; reading.  $22 for 100 of their minimalist&nbsp;cards.</li>
+<li><a href="https://www.gotprint.com" title="https://www.gotprint.com">Gotprint</a>:  simple to somewhat stylish options at deal prices.  $20 for 1000 of their most basic&nbsp;card.</li>
+<li><a href="https://www.moo.com" title="https://www.moo.com">Moo</a>:  their claim to fame is Printfinity which allows you to upload a set of images to make &#8220;unique&#8221; business cards.  That&#8217;s neat, and I&#8217;m impressed that they have <span class="caps">UV</span> embossed ink and <span class="caps">NFC</span> business cards, but the most interesting offering is that they showcase simple, bold designs.  But $20 for 50 cards?  Ouch.&nbsp;Pricey.</li>
+</ul>
+<p>So here&#8217;s what I&#8217;m looking at putting on my&nbsp;card:</p>
+<p><img alt="biz card" src="../images/bizcard.png"></p>
+<p>Simple.  Black <span class="amp">&amp;</span> white, no image or&nbsp;graphic.</p>
+<p>Now I&#8217;m not completely convinced this is going to be the card I use …</p>
+		<p class="content-emphasis"><a href="../business-cards.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
+    <article>
+<abbr class="article-header-date">
+  Sat 04 November 2017
+</abbr> <h1>
+  <a href="../bare-metal-packets.html" rel="bookmark"
+     title="Permalink to Bare Metal Packets">
+    Bare Metal&nbsp;Packets
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="../category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>I&#8217;ve been playing around with various cloud providers over the last couple months and can definitely attest that the experiences are <strong>different</strong>.  I recently got an account with <a href="https://packet.net" title="https://packet.net">Packet.net</a>, who granted me access after quick follow-up email from a support team member.  I had to lodge a credit card account with them but I was also granted $25 in&nbsp;credit.</p>
+<p>Immediately upon entering the site I&#8217;m prompted to start a project and moreover to invite collaborators to share&nbsp;access.</p>
+<p>By the time I get to starting a machine I&#8217;m taken with the way the <span class="caps">UI</span> feels clean and simple, like DigitalOcean or Vultr.  Then I clicked the <a href="https://www.packet.net/bare-metal/" title="https://www.packet.net/bare-metal/">small print</a> next to the <strong>Type</strong> selection to help explain the rather vague&nbsp;listing: </p>
+<p><img alt="server types" src="../images/packet-net-server-types.png"></p>
+<p>Now I&#8217;m transported to an info page on Packet&#8217;s metal minions.  This feels like checking out hotrods in a custom car shop.  Is it already upon us? That longing for the thrill of a humming electromechanical machine over the quietude of virtualized digitization?  Or maybe it&#8217;s just the imagining of the hulking beast growling at the other end of my ssh tunnel, what with 96 physical 2GHz cores* strapped to <span class="caps">128GB</span> <span class="caps">RAM</span> and <span class="caps">250GB</span> <span class="caps">SSD</span> not to mention 20GbE network&nbsp;connectivity.</p>
+<blockquote>
+<p><em>* that&#8217;s the Type 2A:  an <span class="caps">ARMV8</span> for $0.50 and hour, complete with 2 x <a href="http://www.cavium.com/ThunderX_ARM_Processors.html" title="http://www.cavium.com/ThunderX_ARM_Processors.html">Cavium ThunderX</a> processors-worth of&nbsp;action.</em></p>
+</blockquote>
+<p><img alt="server spec" src="../images/packet-net-server-desc.png"></p>
+<hr>
+<p>I started right in with a Type 0 mini running NixOS.  It took a couple minutes&#8230; then a couple minutes …</p>
+		<p class="content-emphasis"><a href="../bare-metal-packets.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
+    <article>
+<abbr class="article-header-date">
   Fri 13 October 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/ssl-encryption-for-my-paas.html" rel="bookmark"
+  <a href="../ssl-encryption-for-my-paas.html" rel="bookmark"
      title="Permalink to SSL Encryption for My PaaS">
     <span class="caps">SSL</span> Encryption for My&nbsp;PaaS
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
@@ -94,9 +243,9 @@
 		<p>Getting your site and application equipped with <span class="caps">SSL</span> encryption and authentication is a basic requirement these days.  It can, however, be troublesome to get it implemented.  And it&#8217;s easy to be conned into paying for a <span class="caps">CA</span>-signed&nbsp;cert.</p>
 <p>Enter <a href="https://letsencrypt.org/">Let&#8217;s Encrypt</a>.  <span class="caps">LE</span> is an open certificate authority (<span class="caps">CA</span>) that is for the people, complements of the Internet Security Research Group.  Their forte is automated certificate issuance and renewal.  There are a plethora of <a href="https://ietf-wg-acme.github.io/acme/draft-ietf-acme-acme.html"><span class="caps">ACME</span></a>-compliant avenues by which to grab yourself (or more accurately, your domain) a&nbsp;cert.</p>
 <p>Today I opted for one of the web browser options, <a href="https://gethttpsforfree.com/">https://gethttpsforfree.com/</a>.  After a good bit of cutting <span class="amp">&amp;</span> pasting command line action with <code>openssl</code>  I was presented with my signed certificate.  This was not a trivial process.  Even so, being involved in the exchange of information helped elucidate how the signing&nbsp;works.</p>
-<p>When I later tried to apply the certs to my <code>helloclock</code> app on my <a href="2017-10-08-deploying-my-own-paas.markdown">dokku host</a>, I discovered one of the probably more common problems with <span class="caps">SSL</span> certs:  getting the domain right.  At the time I though I might be getting what I now know would be considered a wildcard domain cert (available through Let&#8217;s Encrypt in <a href="https://letsencrypt.org/2017/07/06/wildcard-certificates-coming-jan-2018.html">2018</a>), what with associating <code>www.pantageo.us</code>.  But when I planted it inside my dokku app, I found there was indeed a domain&nbsp;mismatch.</p>
+<p>When I later tried to apply the certs to my <code>helloclock</code> app on my <a href="/deploying-my-very-own-paas.html">dokku host</a>, I discovered one of the probably more common problems with <span class="caps">SSL</span> certs:  getting the domain right.  At the time I though I might be getting what I now know would be considered a wildcard domain cert (available through Let&#8217;s Encrypt in <a href="https://letsencrypt.org/2017/07/06/wildcard-certificates-coming-jan-2018.html">2018</a>), what with associating <code>www.pantageo.us</code>.  But when I planted it inside my dokku app, I found there was indeed a domain&nbsp;mismatch.</p>
 <p>I didn&#8217;t want to go through that cumbersome manual browser procedure again&#8212; and Let&#8217;s Encrypt is all but hyping you to use …</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/ssl-encryption-for-my-paas.html">
+		<p class="content-emphasis"><a href="../ssl-encryption-for-my-paas.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
@@ -105,22 +254,22 @@
 <abbr class="article-header-date">
   Tue 10 October 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/chaos-testing.html" rel="bookmark"
+  <a href="../chaos-testing.html" rel="bookmark"
      title="Permalink to Chaos Testing">
     Chaos&nbsp;Testing
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
 </div> <!-- /.article-header-info -->
       <div class="summary">
 		<p>The very cool project <a href="https://github.com/openfaas/openfaas/">OpenFaaS</a> that I found out about at the recent <a href="https://puggrounp.com"><span class="caps">PUG</span></a> (Public-Cloud User Group) meetup turned me on to the concept of <a href="https://codefresh.io/blog/chaos_testing_docker/">Chaos Testing</a>.  Sounds a lot like what my teacher does in his demos for the <a href="https://be.a.cloudgeni.us">CloudGenius</a>&nbsp;bootcamp.</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/chaos-testing.html">
+		<p class="content-emphasis"><a href="../chaos-testing.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
@@ -129,15 +278,15 @@
 <abbr class="article-header-date">
   Sun 08 October 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/deploying-my-very-own-paas.html" rel="bookmark"
+  <a href="../deploying-my-very-own-paas.html" rel="bookmark"
      title="Permalink to Deploying My Very Own PaaS">
     Deploying My Very Own&nbsp;PaaS
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
@@ -179,7 +328,7 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
                   &quot;dokku plugin:install https://github.com/dokku/dokku-postgres.git&quot;,
                   &quot;dokku postgres:create rails-database&quot;,
                   &quot;dokku postgres:link rails-database <span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">appname …</span></pre></div>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/deploying-my-very-own-paas.html">
+		<p class="content-emphasis"><a href="../deploying-my-very-own-paas.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
@@ -188,15 +337,15 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 <abbr class="article-header-date">
   Tue 03 October 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/so-many-ways-to-do-things.html" rel="bookmark"
+  <a href="../so-many-ways-to-do-things.html" rel="bookmark"
      title="Permalink to So Many Ways to Do Things">
     So Many Ways to Do&nbsp;Things
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
@@ -212,7 +361,7 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 <p>Pretty sweet.  Just type <code>gitaur dokku</code>, for&nbsp;example.</p>
 <p>But then I discovered <a href="https://archlinux.fr/man/yaourt.8.html"><code>yaourt</code></a>.  It&#8217;s suggested right on dokku&#8217;s <a href="http://dokku.viewdocs.io/dokku/#install-arch">installation page</a>.  It&#8217;s a pacman frontend that pulls from both official Archlinux repositories and the <span class="caps">AUR</span>, spits out comments related to <span class="caps">AUR</span> packages, warns you profusely, and even lets you edit installation config files along the&nbsp;way.</p>
 <p>So much for my fancy function.  At least I got to use it to clone yaourt from the <span class="caps">AUR</span>.&nbsp;;)</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/so-many-ways-to-do-things.html">
+		<p class="content-emphasis"><a href="../so-many-ways-to-do-things.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
@@ -221,15 +370,15 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 <abbr class="article-header-date">
   Sun 01 October 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html" rel="bookmark"
+  <a href="../forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html" rel="bookmark"
      title="Permalink to Forking a Cookbook with a Knife (Overextending a Culinary Metaphor)">
     Forking a Cookbook with a Knife (Overextending a Culinary&nbsp;Metaphor)
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
@@ -240,7 +389,7 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 <p>I used the following command to grab the&nbsp;tarball:</p>
 <p><code>knife cookbook site download nginx -f nginx_cookbook.tgz</code></p>
 <p>From there you simply extract into your cookbook directory and go forth calling it out in your&nbsp;recipes.</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html">
+		<p class="content-emphasis"><a href="../forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
@@ -249,15 +398,15 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 <abbr class="article-header-date">
   Sat 30 September 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/fabric-with-s3cmd.html" rel="bookmark"
+  <a href="../fabric-with-s3cmd.html" rel="bookmark"
      title="Permalink to Fabric with s3cmd">
     Fabric with&nbsp;s3cmd
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
@@ -278,119 +427,7 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 
 
 <p>And it works!  I love&nbsp;python.</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/fabric-with-s3cmd.html">
-			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
-		</a></p>
-      </div>    </article>
-    <hr />
-    <article>
-<abbr class="article-header-date">
-  Tue 26 September 2017
-</abbr> <h1>
-  <a href="http://blog.pantageo.us/keys-to-the-castle.html" rel="bookmark"
-     title="Permalink to Keys to the Castle">
-    Keys to the&nbsp;Castle
-  </a>
-</h1><div class="article-header-info">
-  <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
-    in 
-    <a href="http://blog.pantageo.us/category/blog.html">
-      blog</a>
-    &nbsp;&nbsp;
-  </p>
-</div> <!-- /.article-header-info -->
-      <div class="summary">
-		<p>I&#8217;ve recently been considering a <a href="https://www.yubico.com/products/yubikey-hardware/">YubiKey</a> along with a password manager for all my security needs.  Two factor authentication, though a bit more burdensome for the typical user in the workplace, is endeared to those business owners for it&#8217;s near invulnerability short of a social engineering attack whereby someone pwns your password <em><span class="caps">AND</span></em> your keyfob.  Oh, and you should use it on a personal level anytime $$$ or credit is&nbsp;involved.</p>
-<p>Recently at Def Con 2017, some hackers (errr, security researchers) demonstrated a <a href="https://motherboard.vice.com/en_us/article/8xazek/hackers-show-proof-of-concepts-to-beat-hardware-based-2fa">proof of concept breaking Yubico&#8217;s <span class="caps">2FA</span></a>.  &#8220;Oh no,&#8221; you say?  Well one of the researchers, Joe Fitzpatrick, assuaged our fears about this &#8220;supply chain attack&#8221; saying, &#8220;keep using your YubiKeys, keep using your tokens.&#8221;  Good, because I just ordered&nbsp;one!</p>
-<p>[Stay tuned for how I fare with&nbsp;it]</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/keys-to-the-castle.html">
-			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
-		</a></p>
-      </div>    </article>
-    <hr />
-    <article>
-<abbr class="article-header-date">
-  Fri 22 September 2017
-</abbr> <h1>
-  <a href="http://blog.pantageo.us/octopress-its-been-nice.html" rel="bookmark"
-     title="Permalink to Octopress, Its Been Nice">
-    Octopress, Its Been&nbsp;Nice
-  </a>
-</h1><div class="article-header-info">
-  <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
-    in 
-    <a href="http://blog.pantageo.us/category/blog.html">
-      blog</a>
-    &nbsp;&nbsp;
-  </p>
-</div> <!-- /.article-header-info -->
-      <div class="summary">
-		<p>Octopress is a wonderfully easy way to run yourself a blog.  I picked it up a couple days back and have already popped out my first ever posts with minimal effort.  But alternatives and options abound, and since Ruby isn&#8217;t what I know, I decided to look into something more&nbsp;Pythonic.</p>
-<p>So this weekend I&#8217;ll give these meager posts a bit of <a href="http://blog.dornea.nu/2014/06/18/migrate-this-blog-from-octopress-to-pelican/">awk <span class="amp">&amp;</span> sed work</a>, compliments of <a href="https://github.com/dorneanu">Victor&#8217;s</a> craftiness, and migrate over to&nbsp;Pelican.</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/octopress-its-been-nice.html">
-			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
-		</a></p>
-      </div>    </article>
-    <hr />
-    <article>
-<abbr class="article-header-date">
-  Thu 21 September 2017
-</abbr> <h1>
-  <a href="http://blog.pantageo.us/dns-flattening.html" rel="bookmark"
-     title="Permalink to DNS Flattening">
-    <span class="caps">DNS</span>&nbsp;Flattening
-  </a>
-</h1><div class="article-header-info">
-  <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
-    in 
-    <a href="http://blog.pantageo.us/category/blog.html">
-      blog</a>
-    &nbsp;&nbsp;
-  </p>
-</div> <!-- /.article-header-info -->
-      <div class="summary">
-		<p>Well it all began with <a href="https://tools.ietf.org/html/rfc1034"><span class="caps">RFC</span> 1034</a>, which was drafted back when I was still wincing over my parents buying me C64 instead of what all the other kids were getting: a Nintendo.  But once my little digits figured out how to plug in a 300 baud modem and hook up to local <span class="caps">BBS</span>&#8217;&#8230; and rack up exorbitant long distance telephone bills (but that&#8217;s a story for another time)&#8230; ha-<span class="caps">HA</span>!  Lo and&nbsp;behold!</p>
-<p>And yet by that time the burgeoning internet was demanding something better than FTPing a common &#8216;<span class="caps">HOSTS</span>.<span class="caps">TXT</span>&#8217; file around.  As the <span class="caps">RFC</span> so succinctly put&nbsp;it:</p>
-<p><code>The impetus for the development of the domain system was growth in the
-Internet</code></p>
-<p>Well said, Mr Paul&nbsp;Mockapetris.</p>
-<p>And here we are now (actually this was in 2014) with CloudFlare&#8217;s <a href="https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/"><span class="caps">DNS</span> <span class="caps">CNAME</span> flattening</a> which seems to go against <span class="caps">RFC</span> 1034 and a later effort at clarification, <a href="https://tools.ietf.org/html/rfc2181"><span class="caps">RFC</span> 2181</a>.  People and companies like it because you can now host your site at the apex of your domain name. Simply visit <code>example.com</code>, instead of <code>www.example.com</code> or <code>root.example.com</code> with no redirects required.  This move has it&#8217;s <a href="https://serverfault.com/questions/613829/why-cant-a-cname-record-be-used-at-the-apex-aka-root-of-a-domain">detractors</a> but as I read through these ancient RFCs, the wisdom therein rings out.  Isn&#8217;t the web all about extensibility and&nbsp;pioneering?</p>
-<p>Amazon claims it doesn&#8217;t break <span class="caps">DNS</span> specs, so I did some <code>dig</code>-ing into one of their <a href="https://genius.com">happy customers&#8217;</a> <span class="caps">DNS</span> records.  Indeed, no illegal <code>CNAME</code> <span class="caps">RR</span> under <code>genius.com</code>, just happy <code>A</code> records …</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/dns-flattening.html">
-			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
-		</a></p>
-      </div>    </article>
-    <hr />
-    <article>
-<abbr class="article-header-date">
-  Wed 20 September 2017
-</abbr> <h1>
-  <a href="http://blog.pantageo.us/digitalocean-now-with-object-storage.html" rel="bookmark"
-     title="Permalink to DigitalOcean Now with Object Storage">
-    DigitalOcean Now with Object&nbsp;Storage
-  </a>
-</h1><div class="article-header-info">
-  <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
-    in 
-    <a href="http://blog.pantageo.us/category/blog.html">
-      blog</a>
-    &nbsp;&nbsp;
-  </p>
-</div> <!-- /.article-header-info -->
-      <div class="summary">
-		<p><a href="https://www.digitalocean.com">DigitalOcean</a>, who offers a nice bit of cloud deployment options, has stepped up with an <a href="https://www.digitalocean.com/community/tutorials/object-storage-vs-block-storage-services">object storage</a> solution of their own: <a href="https://blog.digitalocean.com/introducing-spaces-object-storage/"><em>Spaces</em></a>.</p>
-<p>Highlights&nbsp;include:</p>
-<ul>
-<li>s3cmd management tool compatible (ala Amazon <span class="caps">AWS</span>&nbsp;S3)</li>
-<li>256bit <span class="caps">AES</span>-<span class="caps">XTS</span>&nbsp;encryption</li>
-<li><a href="http://searchstorage.techtarget.com/definition/erasure-coding">erasure coding</a> to keep your data error free with a minimum of storage overhead (vs <span class="caps">RAID</span>)</li>
-<li>2 month free&nbsp;trial</li>
-</ul>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/digitalocean-now-with-object-storage.html">
+		<p class="content-emphasis"><a href="../fabric-with-s3cmd.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
@@ -405,11 +442,11 @@ Internet</code></p>
 
         <li class="active"> <span>1</span> </li>
         <li>
-          <a href="http://blog.pantageo.us/author/travis-mattera2.html">2</a>
+          <a href="../author/travis-mattera2.html">2</a>
         </li>
 
 		<li class="next">
-		  <a href="http://blog.pantageo.us/author/travis-mattera2.html">
+		  <a href="../author/travis-mattera2.html">
 			Next <i class="fa fa-chevron-circle-right fa-fw fa-lg"></i>
 		  </a>
 		</li>

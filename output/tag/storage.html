@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content=" Posts tagged with storage" />
+    <meta name="author" content="Travis Mattera" />
+    <meta name="generator" content="Pelican (VoidyBootstrap theme)" />
+
+    <title>Tag:storage - Pillow Talk</title>
+
+   
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+              crossorigin="anonymous" />
+      <link rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+            crossorigin="anonymous">
+
+
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js" integrity="sha384-FFgGfda92tXC8nCNOxrCQ3R8x1TNkMFqDZVQdDaaJiiVbjkPBXIJBx0o7ETjy8Bh" crossorigin="anonymous"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js" integrity="sha384-ZoaMbDF+4LeFxg6WdScQ9nnR1QC2MIRxA1O9KWEXQwns1G8UNyIEZIQidzb0T1fo" crossorigin="anonymous"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="../favicon.ico" />
+  </head>
+
+  <body>
+   
+    <nav class="navbar navbar-default">
+      <div class="container">
+	   <div class="navbar-header">
+		<button type="button" class="navbar-toggle" 
+				data-toggle="collapse" data-target="#main-navbar-collapse">
+		  <span class="sr-only">Toggle navigation</span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="../" rel="home">
+          <i class="fa fa-home fa-fw fa-lg"> </i> </a>
+       </div>
+
+      <div class="collapse navbar-collapse" id="main-navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="divider"></li>
+            <li class="">
+              <a href="../archives.html">Archives</a>
+            </li>
+          <li class="divider"></li>
+        </ul> <!-- /nav -->
+      </div> <!-- /navbar-collapse -->
+	  </div> <!-- /container -->
+    </nav> <!-- /navbar -->
+
+	<div class="jumbotron" id="overview">
+	  <div class="container">
+		<h1><a href="../">Pillow Talk</a></h1>
+		<p class="lead">Daily meanderings and musings on building castles in the cloud</p>
+	  </div>
+	</div>
+
+    <div class="container" id="main-container">
+        <div class="" id="content">
+<ol class="breadcrumb">
+    <li><a href="../" title="Home" rel="home">
+		<i class="fa fa-home fa-fw fa-lg"></i> </a></li>
+    <li>Tags </li>
+    <li class="active">storage</li>
+</ol>
+    <article>
+<abbr class="article-header-date">
+  Thu 11 January 2018
+</abbr> <h1>
+  <a href="../ceph-storage-cluster-on-digital-ocean-using-terraform-part-2.html" rel="bookmark"
+     title="Permalink to Ceph Storage Cluster on Digital Ocean Using Terraform (Part 2)">
+    Ceph Storage Cluster on Digital Ocean Using Terraform (Part&nbsp;2)
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="../category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>So that bit about me getting a Ceph cluster off the ground a couple weeks ago?  Well I managed to have forgotten quite a bit of the intricacies in those few weeks.  I&#8217;ll chalk it up the&nbsp;holidaze.</p>
+<p>Anyways, after two days of wrangling terraform code, troubleshooting hosts files and discovering how simple <span class="caps">SSH</span> public key comments mean more than maybe they should I&#8217;ve got some working code up on <a href="https://github.com/haggishunk/ceph-digitalocean">haggishunk/ceph-digitalocean</a>.</p>
+<p><strong>Some design decisions I&nbsp;made:</strong></p>
+<ol>
+<li>
+<p>Use <span class="caps">SSH</span> 7.3&#8217;s <code>Include</code> statement inside the <code>~/.ssh/config</code> file to link in host configuration from a separate file.  I chose this (a) to avoid tainting any config file you have and (b) to easily clean up between runs.  If you weren&#8217;t aware, <span class="caps">SSH</span> goes with the first host def in the config file so stale entries will have you hanging out in space or stranger still, trying to connect to someone else&#8217;s machine that got assigned your old <span class="caps">IP</span>.</p>
+</li>
+<li>
+<p>Create an admin node in Digital Ocean instead of using a local Ubuntu <span class="caps">VM</span>.  This added the convolution of having to generate an <span class="caps">SSH</span> keypair on that machine and distribute it to the other nodes; likewise with the <span class="caps">SSH</span> config file and the <code>/etc/hosts</code> file.  I found <code>scp -3</code> to be of use here which routes the secure copy through your local machine.  I feel this decision makes this project more portable, but I&#8217;d be delighted to discuss its virtues and&nbsp;drawbacks.</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span>scp -3 -o …</pre></div>
+		<p class="content-emphasis"><a href="../ceph-storage-cluster-on-digital-ocean-using-terraform-part-2.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
+    <article>
+<abbr class="article-header-date">
+  Tue 09 January 2018
+</abbr> <h1>
+  <a href="../ceph-storage-cluster-on-digital-ocean-using-terraform.html" rel="bookmark"
+     title="Permalink to Ceph Storage Cluster on Digital Ocean Using Terraform">
+    Ceph Storage Cluster on Digital Ocean Using&nbsp;Terraform
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="../category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>A couple weeks ago I got my first <a href="http://ceph.com">Ceph</a> storage cluster off the ground using the fantastic documentation on their website.  Today I sat down and fleshed out the infrastructure through another handy tool, <a href="https://www.terraform.io">Terraform</a>, from the same <a href="https://www.hashicorp.com">people</a> that brought you Vagrant.  My github <a href="https://github.com/haggishunk/ceph-digitalocean">repo</a> haggishunk/ceph-digitalocean is out there for any to examine <span class="amp">&amp;</span>&nbsp;experiment.</p>
+<p>What makes Ceph neat is that it&#8217;s open source <em>and</em> it features device, block and object storage on a cluster of heterogenous machines and&nbsp;volumes.</p>
+<p>In my hunt to automate the entire process I&#8217;ve so far got Terraform provisioning the droplets, connecting volumes, and setting up a ceph user account on each droplet node.  This accomplishes the <a href="http://docs.ceph.com/docs/master/start/quick-start-preflight/">pre-flight</a> steps outlined in Ceph&#8217;s docs for <code>ceph-deploy</code>.  The docs also cover using <code>ceph</code> as a study in how the system works and <code>helm</code> to streamline incorporation into a Kubernetes environment.  I for sure plan on getting to the helm method once I master&nbsp;ceph-deploy.</p>
+<p>Today went well and I learned a couple&nbsp;things:</p>
+<ul>
+<li>Got happiness using <code>self</code> inside a droplet provisioner to write host info into the <span class="caps">SSH</span> config files (see <code>"remote-exec"</code> below).</li>
+<li>Learned that ceph-deploy requires python2 installed on the cluster nodes.  Make sure to install it if using 16.04 <span class="caps">LTS</span>.</li>
+</ul>
+<p>Here&#8217;s the meat of the code from <code>instances.tf</code>:</p>
+<div class="highlight"><pre><span></span>resource &quot;digitalocean_droplet&quot; &quot;ceph&quot; {
+    image                   = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">image</span><span class="cp">}</span>&quot;
+    count                   = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">instances</span><span class="cp">}</span>&quot;
+    name                    = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">prefix</span><span class="cp">}</span>-<span class="cp">${</span><span class="n">count</span><span class="o">.</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="cp">}</span>&quot;
+    region                  = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">do_region</span><span class="cp">}</span>&quot;
+    size                    = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">size</span><span class="cp">}</span>&quot;
+    volume_ids              = [&quot;<span class="cp">${</span><span class="n">element</span><span class="p">(</span><span class="n">digitalocean_volume</span><span class="o">.</span><span class="n">ceph</span><span class="o">-</span><span class="n">vol</span><span class="o">.*.</span><span class="n">id</span><span class="p">,</span> <span class="n">count</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="cp">}</span>&quot;]
+    backups …</pre></div>
+		<p class="content-emphasis"><a href="../ceph-storage-cluster-on-digital-ocean-using-terraform.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
+
+<nav class="index-pager">
+
+</nav> <!-- /index-pager -->
+        </div><!-- /content -->
+
+    </div><!--/.container /#main-container -->
+
+    <footer id="site-footer">
+ 
+      <address id="site-colophon">
+        <p class="text-center text-muted">
+        Site built using <a href="http://getpelican.com/" target="_blank">Pelican</a>
+        &nbsp;&bull;&nbsp; Theme based on
+        <a href="http://www.voidynullness.net/page/voidy-bootstrap-pelican-theme/"
+           target="_blank">VoidyBootstrap</a> by 
+        <a href="http://www.robertiwancz.com/"
+           target="_blank">RKI</a>  
+        </p>
+      </address><!-- /colophon  -->
+    </footer>
+
+
+    <!-- javascript -->
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+
+  </body>
+</html>

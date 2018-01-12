@@ -27,7 +27,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js" integrity="sha384-ZoaMbDF+4LeFxg6WdScQ9nnR1QC2MIRxA1O9KWEXQwns1G8UNyIEZIQidzb0T1fo" crossorigin="anonymous"></script>
     <![endif]-->
 
-    <link rel="shortcut icon" href="http://blog.pantageo.us/favicon.ico" />
+    <link rel="shortcut icon" href="../favicon.ico" />
   </head>
 
   <body>
@@ -42,7 +42,7 @@
 		  <span class="icon-bar"></span>
 		  <span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand" href="http://blog.pantageo.us/" rel="home">
+		<a class="navbar-brand" href="../" rel="home">
           <i class="fa fa-home fa-fw fa-lg"> </i> </a>
        </div>
 
@@ -50,7 +50,7 @@
         <ul class="nav navbar-nav">
             <li class="divider"></li>
             <li class="">
-              <a href="http://blog.pantageo.us/archives.html">Archives</a>
+              <a href="../archives.html">Archives</a>
             </li>
           <li class="divider"></li>
         </ul> <!-- /nav -->
@@ -60,7 +60,7 @@
 
 	<div class="jumbotron" id="overview">
 	  <div class="container">
-		<h1><a href="http://blog.pantageo.us/">Pillow Talk</a></h1>
+		<h1><a href="../">Pillow Talk</a></h1>
 		<p class="lead">Daily meanderings and musings on building castles in the cloud</p>
 	  </div>
 	</div>
@@ -68,24 +68,99 @@
     <div class="container" id="main-container">
         <div class="" id="content">
 <ol class="breadcrumb">
-    <li><a href="http://blog.pantageo.us/" title="Home" rel="home">
+    <li><a href="../" title="Home" rel="home">
 		<i class="fa fa-home fa-fw fa-lg"></i> </a></li>
     <li>Tags </li>
     <li class="active">automation</li>
 </ol>
     <article>
 <abbr class="article-header-date">
+  Thu 11 January 2018
+</abbr> <h1>
+  <a href="../ceph-storage-cluster-on-digital-ocean-using-terraform-part-2.html" rel="bookmark"
+     title="Permalink to Ceph Storage Cluster on Digital Ocean Using Terraform (Part 2)">
+    Ceph Storage Cluster on Digital Ocean Using Terraform (Part&nbsp;2)
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="../category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>So that bit about me getting a Ceph cluster off the ground a couple weeks ago?  Well I managed to have forgotten quite a bit of the intricacies in those few weeks.  I&#8217;ll chalk it up the&nbsp;holidaze.</p>
+<p>Anyways, after two days of wrangling terraform code, troubleshooting hosts files and discovering how simple <span class="caps">SSH</span> public key comments mean more than maybe they should I&#8217;ve got some working code up on <a href="https://github.com/haggishunk/ceph-digitalocean">haggishunk/ceph-digitalocean</a>.</p>
+<p><strong>Some design decisions I&nbsp;made:</strong></p>
+<ol>
+<li>
+<p>Use <span class="caps">SSH</span> 7.3&#8217;s <code>Include</code> statement inside the <code>~/.ssh/config</code> file to link in host configuration from a separate file.  I chose this (a) to avoid tainting any config file you have and (b) to easily clean up between runs.  If you weren&#8217;t aware, <span class="caps">SSH</span> goes with the first host def in the config file so stale entries will have you hanging out in space or stranger still, trying to connect to someone else&#8217;s machine that got assigned your old <span class="caps">IP</span>.</p>
+</li>
+<li>
+<p>Create an admin node in Digital Ocean instead of using a local Ubuntu <span class="caps">VM</span>.  This added the convolution of having to generate an <span class="caps">SSH</span> keypair on that machine and distribute it to the other nodes; likewise with the <span class="caps">SSH</span> config file and the <code>/etc/hosts</code> file.  I found <code>scp -3</code> to be of use here which routes the secure copy through your local machine.  I feel this decision makes this project more portable, but I&#8217;d be delighted to discuss its virtues and&nbsp;drawbacks.</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span>scp -3 -o …</pre></div>
+		<p class="content-emphasis"><a href="../ceph-storage-cluster-on-digital-ocean-using-terraform-part-2.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
+    <article>
+<abbr class="article-header-date">
+  Tue 09 January 2018
+</abbr> <h1>
+  <a href="../ceph-storage-cluster-on-digital-ocean-using-terraform.html" rel="bookmark"
+     title="Permalink to Ceph Storage Cluster on Digital Ocean Using Terraform">
+    Ceph Storage Cluster on Digital Ocean Using&nbsp;Terraform
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="../category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>A couple weeks ago I got my first <a href="http://ceph.com">Ceph</a> storage cluster off the ground using the fantastic documentation on their website.  Today I sat down and fleshed out the infrastructure through another handy tool, <a href="https://www.terraform.io">Terraform</a>, from the same <a href="https://www.hashicorp.com">people</a> that brought you Vagrant.  My github <a href="https://github.com/haggishunk/ceph-digitalocean">repo</a> haggishunk/ceph-digitalocean is out there for any to examine <span class="amp">&amp;</span>&nbsp;experiment.</p>
+<p>What makes Ceph neat is that it&#8217;s open source <em>and</em> it features device, block and object storage on a cluster of heterogenous machines and&nbsp;volumes.</p>
+<p>In my hunt to automate the entire process I&#8217;ve so far got Terraform provisioning the droplets, connecting volumes, and setting up a ceph user account on each droplet node.  This accomplishes the <a href="http://docs.ceph.com/docs/master/start/quick-start-preflight/">pre-flight</a> steps outlined in Ceph&#8217;s docs for <code>ceph-deploy</code>.  The docs also cover using <code>ceph</code> as a study in how the system works and <code>helm</code> to streamline incorporation into a Kubernetes environment.  I for sure plan on getting to the helm method once I master&nbsp;ceph-deploy.</p>
+<p>Today went well and I learned a couple&nbsp;things:</p>
+<ul>
+<li>Got happiness using <code>self</code> inside a droplet provisioner to write host info into the <span class="caps">SSH</span> config files (see <code>"remote-exec"</code> below).</li>
+<li>Learned that ceph-deploy requires python2 installed on the cluster nodes.  Make sure to install it if using 16.04 <span class="caps">LTS</span>.</li>
+</ul>
+<p>Here&#8217;s the meat of the code from <code>instances.tf</code>:</p>
+<div class="highlight"><pre><span></span>resource &quot;digitalocean_droplet&quot; &quot;ceph&quot; {
+    image                   = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">image</span><span class="cp">}</span>&quot;
+    count                   = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">instances</span><span class="cp">}</span>&quot;
+    name                    = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">prefix</span><span class="cp">}</span>-<span class="cp">${</span><span class="n">count</span><span class="o">.</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="cp">}</span>&quot;
+    region                  = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">do_region</span><span class="cp">}</span>&quot;
+    size                    = &quot;<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">size</span><span class="cp">}</span>&quot;
+    volume_ids              = [&quot;<span class="cp">${</span><span class="n">element</span><span class="p">(</span><span class="n">digitalocean_volume</span><span class="o">.</span><span class="n">ceph</span><span class="o">-</span><span class="n">vol</span><span class="o">.*.</span><span class="n">id</span><span class="p">,</span> <span class="n">count</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="cp">}</span>&quot;]
+    backups …</pre></div>
+		<p class="content-emphasis"><a href="../ceph-storage-cluster-on-digital-ocean-using-terraform.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
+    <article>
+<abbr class="article-header-date">
   Fri 13 October 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/ssl-encryption-for-my-paas.html" rel="bookmark"
+  <a href="../ssl-encryption-for-my-paas.html" rel="bookmark"
      title="Permalink to SSL Encryption for My PaaS">
     <span class="caps">SSL</span> Encryption for My&nbsp;PaaS
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
@@ -94,9 +169,9 @@
 		<p>Getting your site and application equipped with <span class="caps">SSL</span> encryption and authentication is a basic requirement these days.  It can, however, be troublesome to get it implemented.  And it&#8217;s easy to be conned into paying for a <span class="caps">CA</span>-signed&nbsp;cert.</p>
 <p>Enter <a href="https://letsencrypt.org/">Let&#8217;s Encrypt</a>.  <span class="caps">LE</span> is an open certificate authority (<span class="caps">CA</span>) that is for the people, complements of the Internet Security Research Group.  Their forte is automated certificate issuance and renewal.  There are a plethora of <a href="https://ietf-wg-acme.github.io/acme/draft-ietf-acme-acme.html"><span class="caps">ACME</span></a>-compliant avenues by which to grab yourself (or more accurately, your domain) a&nbsp;cert.</p>
 <p>Today I opted for one of the web browser options, <a href="https://gethttpsforfree.com/">https://gethttpsforfree.com/</a>.  After a good bit of cutting <span class="amp">&amp;</span> pasting command line action with <code>openssl</code>  I was presented with my signed certificate.  This was not a trivial process.  Even so, being involved in the exchange of information helped elucidate how the signing&nbsp;works.</p>
-<p>When I later tried to apply the certs to my <code>helloclock</code> app on my <a href="2017-10-08-deploying-my-own-paas.markdown">dokku host</a>, I discovered one of the probably more common problems with <span class="caps">SSL</span> certs:  getting the domain right.  At the time I though I might be getting what I now know would be considered a wildcard domain cert (available through Let&#8217;s Encrypt in <a href="https://letsencrypt.org/2017/07/06/wildcard-certificates-coming-jan-2018.html">2018</a>), what with associating <code>www.pantageo.us</code>.  But when I planted it inside my dokku app, I found there was indeed a domain&nbsp;mismatch.</p>
+<p>When I later tried to apply the certs to my <code>helloclock</code> app on my <a href="/deploying-my-very-own-paas.html">dokku host</a>, I discovered one of the probably more common problems with <span class="caps">SSL</span> certs:  getting the domain right.  At the time I though I might be getting what I now know would be considered a wildcard domain cert (available through Let&#8217;s Encrypt in <a href="https://letsencrypt.org/2017/07/06/wildcard-certificates-coming-jan-2018.html">2018</a>), what with associating <code>www.pantageo.us</code>.  But when I planted it inside my dokku app, I found there was indeed a domain&nbsp;mismatch.</p>
 <p>I didn&#8217;t want to go through that cumbersome manual browser procedure again&#8212; and Let&#8217;s Encrypt is all but hyping you to use …</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/ssl-encryption-for-my-paas.html">
+		<p class="content-emphasis"><a href="../ssl-encryption-for-my-paas.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
@@ -105,15 +180,15 @@
 <abbr class="article-header-date">
   Sun 08 October 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/deploying-my-very-own-paas.html" rel="bookmark"
+  <a href="../deploying-my-very-own-paas.html" rel="bookmark"
      title="Permalink to Deploying My Very Own PaaS">
     Deploying My Very Own&nbsp;PaaS
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
@@ -155,7 +230,7 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
                   &quot;dokku plugin:install https://github.com/dokku/dokku-postgres.git&quot;,
                   &quot;dokku postgres:create rails-database&quot;,
                   &quot;dokku postgres:link rails-database <span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">appname …</span></pre></div>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/deploying-my-very-own-paas.html">
+		<p class="content-emphasis"><a href="../deploying-my-very-own-paas.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
@@ -164,15 +239,15 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 <abbr class="article-header-date">
   Sun 01 October 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html" rel="bookmark"
+  <a href="../forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html" rel="bookmark"
      title="Permalink to Forking a Cookbook with a Knife (Overextending a Culinary Metaphor)">
     Forking a Cookbook with a Knife (Overextending a Culinary&nbsp;Metaphor)
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
@@ -183,7 +258,7 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 <p>I used the following command to grab the&nbsp;tarball:</p>
 <p><code>knife cookbook site download nginx -f nginx_cookbook.tgz</code></p>
 <p>From there you simply extract into your cookbook directory and go forth calling it out in your&nbsp;recipes.</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html">
+		<p class="content-emphasis"><a href="../forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
@@ -192,15 +267,15 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 <abbr class="article-header-date">
   Sat 30 September 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/fabric-with-s3cmd.html" rel="bookmark"
+  <a href="../fabric-with-s3cmd.html" rel="bookmark"
      title="Permalink to Fabric with s3cmd">
     Fabric with&nbsp;s3cmd
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
@@ -221,7 +296,7 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 
 
 <p>And it works!  I love&nbsp;python.</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/fabric-with-s3cmd.html">
+		<p class="content-emphasis"><a href="../fabric-with-s3cmd.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>

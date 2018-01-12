@@ -5,7 +5,7 @@ import shutil
 import sys
 import SocketServer
 
-#from pelican.server import ComplexHTTPRequestHandler
+from pelican.server import ComplexHTTPRequestHandler
 
 # Local path configuration (can be absolute or relative to fabfile)
 env.deploy_path = 'output'
@@ -93,7 +93,7 @@ def publish_s3cmd():
     """Publish to Amazon s3 via s3cmd"""
     options = ["acl-public", "delete-removed"]
     opt_string = ' '.join(['--%s' % o for o in options])
-    command_string = "s3cmd %s sync %s/* s3://%s" % (opt_string, DEPLOY_PATH, s3bucket)
+    command_string = "s3cmd {0} sync {1}/* s3://{2}".format(opt_string, DEPLOY_PATH, s3bucket)
     local(command_string)
 
 def gh_pages():

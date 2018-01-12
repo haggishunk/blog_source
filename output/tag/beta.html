@@ -27,7 +27,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js" integrity="sha384-ZoaMbDF+4LeFxg6WdScQ9nnR1QC2MIRxA1O9KWEXQwns1G8UNyIEZIQidzb0T1fo" crossorigin="anonymous"></script>
     <![endif]-->
 
-    <link rel="shortcut icon" href="http://blog.pantageo.us/favicon.ico" />
+    <link rel="shortcut icon" href="../favicon.ico" />
   </head>
 
   <body>
@@ -42,7 +42,7 @@
 		  <span class="icon-bar"></span>
 		  <span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand" href="http://blog.pantageo.us/" rel="home">
+		<a class="navbar-brand" href="../" rel="home">
           <i class="fa fa-home fa-fw fa-lg"> </i> </a>
        </div>
 
@@ -50,7 +50,7 @@
         <ul class="nav navbar-nav">
             <li class="divider"></li>
             <li class="">
-              <a href="http://blog.pantageo.us/archives.html">Archives</a>
+              <a href="../archives.html">Archives</a>
             </li>
           <li class="divider"></li>
         </ul> <!-- /nav -->
@@ -60,7 +60,7 @@
 
 	<div class="jumbotron" id="overview">
 	  <div class="container">
-		<h1><a href="http://blog.pantageo.us/">Pillow Talk</a></h1>
+		<h1><a href="../">Pillow Talk</a></h1>
 		<p class="lead">Daily meanderings and musings on building castles in the cloud</p>
 	  </div>
 	</div>
@@ -68,7 +68,7 @@
     <div class="container" id="main-container">
         <div class="" id="content">
 <ol class="breadcrumb">
-    <li><a href="http://blog.pantageo.us/" title="Home" rel="home">
+    <li><a href="../" title="Home" rel="home">
 		<i class="fa fa-home fa-fw fa-lg"></i> </a></li>
     <li>Tags </li>
     <li class="active">beta</li>
@@ -77,15 +77,15 @@
 <abbr class="article-header-date">
   Fri 13 October 2017
 </abbr> <h1>
-  <a href="http://blog.pantageo.us/ssl-encryption-for-my-paas.html" rel="bookmark"
+  <a href="../ssl-encryption-for-my-paas.html" rel="bookmark"
      title="Permalink to SSL Encryption for My PaaS">
     <span class="caps">SSL</span> Encryption for My&nbsp;PaaS
   </a>
 </h1><div class="article-header-info">
   <p>
-      Posted by <a href="http://blog.pantageo.us/author/travis-mattera.html">Travis Mattera</a>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
     in 
-    <a href="http://blog.pantageo.us/category/blog.html">
+    <a href="../category/blog.html">
       blog</a>
     &nbsp;&nbsp;
   </p>
@@ -94,9 +94,9 @@
 		<p>Getting your site and application equipped with <span class="caps">SSL</span> encryption and authentication is a basic requirement these days.  It can, however, be troublesome to get it implemented.  And it&#8217;s easy to be conned into paying for a <span class="caps">CA</span>-signed&nbsp;cert.</p>
 <p>Enter <a href="https://letsencrypt.org/">Let&#8217;s Encrypt</a>.  <span class="caps">LE</span> is an open certificate authority (<span class="caps">CA</span>) that is for the people, complements of the Internet Security Research Group.  Their forte is automated certificate issuance and renewal.  There are a plethora of <a href="https://ietf-wg-acme.github.io/acme/draft-ietf-acme-acme.html"><span class="caps">ACME</span></a>-compliant avenues by which to grab yourself (or more accurately, your domain) a&nbsp;cert.</p>
 <p>Today I opted for one of the web browser options, <a href="https://gethttpsforfree.com/">https://gethttpsforfree.com/</a>.  After a good bit of cutting <span class="amp">&amp;</span> pasting command line action with <code>openssl</code>  I was presented with my signed certificate.  This was not a trivial process.  Even so, being involved in the exchange of information helped elucidate how the signing&nbsp;works.</p>
-<p>When I later tried to apply the certs to my <code>helloclock</code> app on my <a href="2017-10-08-deploying-my-own-paas.markdown">dokku host</a>, I discovered one of the probably more common problems with <span class="caps">SSL</span> certs:  getting the domain right.  At the time I though I might be getting what I now know would be considered a wildcard domain cert (available through Let&#8217;s Encrypt in <a href="https://letsencrypt.org/2017/07/06/wildcard-certificates-coming-jan-2018.html">2018</a>), what with associating <code>www.pantageo.us</code>.  But when I planted it inside my dokku app, I found there was indeed a domain&nbsp;mismatch.</p>
+<p>When I later tried to apply the certs to my <code>helloclock</code> app on my <a href="/deploying-my-very-own-paas.html">dokku host</a>, I discovered one of the probably more common problems with <span class="caps">SSL</span> certs:  getting the domain right.  At the time I though I might be getting what I now know would be considered a wildcard domain cert (available through Let&#8217;s Encrypt in <a href="https://letsencrypt.org/2017/07/06/wildcard-certificates-coming-jan-2018.html">2018</a>), what with associating <code>www.pantageo.us</code>.  But when I planted it inside my dokku app, I found there was indeed a domain&nbsp;mismatch.</p>
 <p>I didn&#8217;t want to go through that cumbersome manual browser procedure again&#8212; and Let&#8217;s Encrypt is all but hyping you to use …</p>
-		<p class="content-emphasis"><a href="http://blog.pantageo.us/ssl-encryption-for-my-paas.html">
+		<p class="content-emphasis"><a href="../ssl-encryption-for-my-paas.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
