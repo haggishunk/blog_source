@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 AUTHOR = 'Travis Mattera'
 SITENAME = 'Pillow Talk'
 SITEURL = 'http://blog.pantageo.us'
-SITESUBTITLE = 'Daily meanderings and musings on building castles in the cloud'
+SITESUBTITLE = 'Meanderings and musings on building castles in the cloud'
 LANDING_PAGE_ABOUT = 'hmm'
 PATH = 'content'
 

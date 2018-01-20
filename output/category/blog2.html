@@ -61,7 +61,7 @@
 	<div class="jumbotron" id="overview">
 	  <div class="container">
 		<h1><a href="../">Pillow Talk</a></h1>
-		<p class="lead">Daily meanderings and musings on building castles in the cloud</p>
+		<p class="lead">Meanderings and musings on building castles in the cloud</p>
 	  </div>
 	</div>
 
@@ -73,6 +73,44 @@
     <li>Categories </li>
     <li class="active">blog</li>
 </ol>
+    <article>
+<abbr class="article-header-date">
+  Sat 30 September 2017
+</abbr> <h1>
+  <a href="../fabric-with-s3cmd.html" rel="bookmark"
+     title="Permalink to Fabric with s3cmd">
+    Fabric with&nbsp;s3cmd
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="../category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>I use s3cmd to publish my static blog to my Amazon S3 bucket.  <a href="http://docs.getpelican.com/en/stable/publish.html">Pelican docs</a> suggest using <a href="http://docs.fabfile.org/en/1.13/index.html">Fabric</a> as a publishing engine as it is written in python&#8230; and since you probably use Pelican because <em>it&#8217;s</em> written in python&#8230; well you see the&nbsp;allure.</p>
+<p>Pelican&#8217;s <code>pelican-quickstart</code> command writes a pre-fabbed <code>fabfile.py</code> in your root blog directory but I noticed only swift (for Rackspace Cloud), rsync and github support.  So I tried putting in a little tweak for&nbsp;s3cmd:</p>
+<div class="highlight"><pre><span></span><span class="err">#</span> <span class="nx">Amazon</span> <span class="nx">S3</span> <span class="nx">config</span> <span class="nx">settings</span>
+<span class="n">s3bucket</span><span class="o"> =</span> <span class="s2">&quot;blog.pantageo.us&quot;</span>      
+
+<span class="nx">def</span> <span class="nx">publish_s3cmd</span><span class="p">():</span>
+    <span class="s2">&quot;&quot;&quot;Publish to Amazon s3 via s3cmd&quot;&quot;&quot;</span>
+    <span class="n">options</span><span class="o"> =</span> <span class="err">[</span><span class="s2">&quot;acl-public&quot;</span><span class="p">,</span> <span class="s2">&quot;delete-removed&quot;</span><span class="cp">]</span><span class="x"></span>
+<span class="x">    opt_string = &#39; &#39;.join(</span><span class="cp">[</span><span class="s1">&#39;--%s&#39;</span> <span class="o">%</span> <span class="nx">o</span> <span class="nx">for</span> <span class="n">o</span> <span class="k">in</span> <span class="nx">options</span><span class="cp">]</span><span class="x">)</span>
+<span class="x">    command_string = &quot;s3cmd %s sync %s/* s3://%s&quot; % (opt_string, DEPLOY_PATH, s3bucket)</span>
+<span class="x">    local(command_string)</span>
+</pre></div>
+
+
+<p>And it works!  I love&nbsp;python.</p>
+		<p class="content-emphasis"><a href="../fabric-with-s3cmd.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
     <article>
 <abbr class="article-header-date">
   Tue 26 September 2017

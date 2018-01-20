@@ -61,7 +61,7 @@
 	<div class="jumbotron" id="overview">
 	  <div class="container">
 		<h1><a href="../">Pillow Talk</a></h1>
-		<p class="lead">Daily meanderings and musings on building castles in the cloud</p>
+		<p class="lead">Meanderings and musings on building castles in the cloud</p>
 	  </div>
 	</div>
 
@@ -73,6 +73,86 @@
     <li>Authors </li>
     <li class="active">Travis Mattera</li>
 </ol>
+    <article>
+<abbr class="article-header-date">
+  Tue 16 January 2018
+</abbr> <h1>
+  <a href="../ceph-storage-cluster-on-digital-ocean-using-terraform-part-3.html" rel="bookmark"
+     title="Permalink to Ceph Storage Cluster on Digital Ocean Using Terraform (Part 3)">
+    Ceph Storage Cluster on Digital Ocean Using Terraform (Part&nbsp;3)
+  </a>
+</h1><div class="article-header-info">
+  <p>
+      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
+    in 
+    <a href="../category/blog.html">
+      blog</a>
+    &nbsp;&nbsp;
+  </p>
+</div> <!-- /.article-header-info -->
+      <div class="summary">
+		<p>This <a href="https://github.com/haggishunk/ceph-digitalocean">Ceph project</a> is almost finished.  The terraform code now sets out properly configured servers ready for ceph-deploy to do its work, which sets me up nicely to perform a&nbsp;demo.</p>
+<p><img alt="squid" src="https://cdn.brainpop.com/science/diversityoflife/giantsquid/screenshot1.png"></p>
+<p>A basic demo script would go as such after connecting to <code>ceph-admin</code>:</p>
+<p>Designate a cluster monitor.  In production use one would deploy 3 or more but this is a simple&nbsp;demo.</p>
+<div class="highlight"><pre><span></span>ceph-deploy new ceph-1
+</pre></div>
+
+
+<p>Add these two lines to <code>ceph.conf</code> to inform the cluster which network to use for what communication.  Monitors like to talk on the public network, while the OSDs&#8217; heartbeat traffic is offloaded to the private&nbsp;network.</p>
+<div class="highlight"><pre><span></span>public network = 0.0.0.0/0
+private network = 10.138.0.0/16
+</pre></div>
+
+
+<p>Install ceph on each of the&nbsp;nodes.</p>
+<div class="highlight"><pre><span></span>ceph-deploy install ceph-1 ceph-2 ceph-3
+</pre></div>
+
+
+<p>Spin up the&nbsp;monitor</p>
+<div class="highlight"><pre><span></span>ceph-deploy mon create-initial
+</pre></div>
+
+
+<p>Distribute&nbsp;keys</p>
+<div class="highlight"><pre><span></span>ceph-deploy admin ceph-1 ceph-2 ceph-3
+</pre></div>
+
+
+<p>Rev up the OSDs which are the nodes with extra storage&nbsp;attached.</p>
+<div class="highlight"><pre><span></span>ceph-deploy osd create ceph-1:sda ceph-2:sda ceph-3:sda
+</pre></div>
+
+
+<p>At this point you should check the health of your&nbsp;cluster.</p>
+<div class="highlight"><pre><span></span>ssh ceph-1 sudo ceph health
+
+HEALTH OK
+</pre></div>
+
+
+<p>Or more&nbsp;verbosely,</p>
+<div class="highlight"><pre><span></span>ssh ceph-1 sudo ceph -s
+
+    cluster 0006732f-d4d2-4377-9afb-85d59175db6f
+     health HEALTH_OK
+     monmap e1: 1 mons at {ceph-2=165.227.5.141:6789/0}
+            election epoch 3, quorum 0 ceph-2
+     osdmap e14: 3 osds: 3 up, 3 in
+            flags sortbitwise,require_jewel_osds
+      pgmap v26: 64 pgs, 1 pools, 0 bytes data, 0 objects
+            101 MB used, 15225 MB / 15326 MB avail
+                  64 active+clean
+</pre></div>
+
+
+<p>Before designating a Rados object storage …</p>
+		<p class="content-emphasis"><a href="../ceph-storage-cluster-on-digital-ocean-using-terraform-part-3.html">
+			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
+		</a></p>
+      </div>    </article>
+    <hr />
     <article>
 <abbr class="article-header-date">
   Thu 11 January 2018
@@ -390,44 +470,6 @@ resource &quot;digitalocean_droplet&quot; &quot;dokku&quot; {
 <p><code>knife cookbook site download nginx -f nginx_cookbook.tgz</code></p>
 <p>From there you simply extract into your cookbook directory and go forth calling it out in your&nbsp;recipes.</p>
 		<p class="content-emphasis"><a href="../forking-a-cookbook-with-a-knife-overextending-a-culinary-metaphor.html">
-			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
-		</a></p>
-      </div>    </article>
-    <hr />
-    <article>
-<abbr class="article-header-date">
-  Sat 30 September 2017
-</abbr> <h1>
-  <a href="../fabric-with-s3cmd.html" rel="bookmark"
-     title="Permalink to Fabric with s3cmd">
-    Fabric with&nbsp;s3cmd
-  </a>
-</h1><div class="article-header-info">
-  <p>
-      Posted by <a href="../author/travis-mattera.html">Travis Mattera</a>
-    in 
-    <a href="../category/blog.html">
-      blog</a>
-    &nbsp;&nbsp;
-  </p>
-</div> <!-- /.article-header-info -->
-      <div class="summary">
-		<p>I use s3cmd to publish my static blog to my Amazon S3 bucket.  <a href="http://docs.getpelican.com/en/stable/publish.html">Pelican docs</a> suggest using <a href="http://docs.fabfile.org/en/1.13/index.html">Fabric</a> as a publishing engine as it is written in python&#8230; and since you probably use Pelican because <em>it&#8217;s</em> written in python&#8230; well you see the&nbsp;allure.</p>
-<p>Pelican&#8217;s <code>pelican-quickstart</code> command writes a pre-fabbed <code>fabfile.py</code> in your root blog directory but I noticed only swift (for Rackspace Cloud), rsync and github support.  So I tried putting in a little tweak for&nbsp;s3cmd:</p>
-<div class="highlight"><pre><span></span><span class="err">#</span> <span class="nx">Amazon</span> <span class="nx">S3</span> <span class="nx">config</span> <span class="nx">settings</span>
-<span class="n">s3bucket</span><span class="o"> =</span> <span class="s2">&quot;blog.pantageo.us&quot;</span>      
-
-<span class="nx">def</span> <span class="nx">publish_s3cmd</span><span class="p">():</span>
-    <span class="s2">&quot;&quot;&quot;Publish to Amazon s3 via s3cmd&quot;&quot;&quot;</span>
-    <span class="n">options</span><span class="o"> =</span> <span class="err">[</span><span class="s2">&quot;acl-public&quot;</span><span class="p">,</span> <span class="s2">&quot;delete-removed&quot;</span><span class="cp">]</span><span class="x"></span>
-<span class="x">    opt_string = &#39; &#39;.join(</span><span class="cp">[</span><span class="s1">&#39;--%s&#39;</span> <span class="o">%</span> <span class="nx">o</span> <span class="nx">for</span> <span class="n">o</span> <span class="k">in</span> <span class="nx">options</span><span class="cp">]</span><span class="x">)</span>
-<span class="x">    command_string = &quot;s3cmd %s sync %s/* s3://%s&quot; % (opt_string, DEPLOY_PATH, s3bucket)</span>
-<span class="x">    local(command_string)</span>
-</pre></div>
-
-
-<p>And it works!  I love&nbsp;python.</p>
-		<p class="content-emphasis"><a href="../fabric-with-s3cmd.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>

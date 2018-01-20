@@ -20,21 +20,20 @@ scp -3 -o StrictHostKeyChecking=no ceph-admin:~/.ssh/authorized_keys ceph-1:~/.s
 
 1. Ceph-deploy uses SSH to connect to nodes for installation, but not for monitor dispatch.  You must ensure that hostnames are resolvable which I did by adding lines to `/etc/hosts` on the admin node.
 
-2.  Most supported distros don't have ceph-deploy in their default repos.  Had fun adding the repo to Debian jessie with these commands.
+2.  Most supported distros don't have ceph-deploy in their default repos.  Had fun adding the repo to Debian jessie with these commands. _Update 1/19/18:  Note that Ubuntu's default repos have an old version of ceph-deploy.  You will hate life if you try running a cluster with this outdated version!_
 ```                                                                  
-gpg --keyserver keys.gnupg.net --recv-keys E84AC2C0460F3994
-gpg -a --export E84AC2C0460F3994 | sudo apt-key add -
-echo "deb http://download.ceph.com/debian-jewel jessie main" | sudo tee -a /etc/apt/sources.list
+wget -q -O- 'https://download.ceph.com/keys/release.asc' | sudo apt-key add -
+echo deb http://download.ceph.com/debian $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list
 sudo apt-get update
 sudo apt-get install ceph-deploy
 ```
 
-3.  Terraform's [HCL interpolation][] supports path introspection, for example `${path.root}` which gives the path that Terraform was run from.  I used this to handily store hosts entries without tainting the local filesystem or heaven forbid the local hosts file.
+3.  Terraform's [HCL interpolation][] supports path introspection, for example `${path.root}` which gives the path that Terraform was run from.  I used this to handily store host entries without tainting the local filesystem or heaven forbid the local hosts file.
 ```
 echo '${self.ipv4_address} ${self.name} ${self.name}' | tee -a ${path.root}/hosts_file
 ```
 
-4.  The SSH public keyfile generated remotely on the admin node comes with a comment field `cephalus@ceph-admin` but when I sent this over to the nodes and placed it in their `authorized_keys` file my connection from the admin node was blocked.  I stripped out the comment with the ssh-keygen command's `-C` switch as so and was permitted entry.
+4.  The SSH public keyfile generated remotely on the admin node comes with a comment field `cephalus@ceph-admin` but when I sent this over to the nodes and placed it in their `authorized_keys` file my connection from the admin node was blocked.  I stripped out the comment with the ssh-keygen command's `-C` switch as so and was permitted entry.  _Update 1/19/18: Also specified a blank password with `-N ''` to eliminate the need for user interaction._
 ```
 ssh-keygen -t rsa -b 4096 -f /home/${var.admin_user}/.ssh/id_rsa -N '' -C ''
 ```

@@ -61,7 +61,7 @@
 	<div class="jumbotron" id="overview">
 	  <div class="container">
 		<h1><a href="./">Pillow Talk</a></h1>
-		<p class="lead">Daily meanderings and musings on building castles in the cloud</p>
+		<p class="lead">Meanderings and musings on building castles in the cloud</p>
 	  </div>
 	</div>
 
@@ -107,26 +107,25 @@
 <p>Ceph-deploy uses <span class="caps">SSH</span> to connect to nodes for installation, but not for monitor dispatch.  You must ensure that hostnames are resolvable which I did by adding lines to <code>/etc/hosts</code> on the admin&nbsp;node.</p>
 </li>
 <li>
-<p>Most supported distros don&#8217;t have ceph-deploy in their default repos.  Had fun adding the repo to Debian jessie with these&nbsp;commands.</p>
+<p>Most supported distros don&#8217;t have ceph-deploy in their default repos.  Had fun adding the repo to Debian jessie with these commands. <em>Update 1/19/18:  Note that Ubuntu&#8217;s default repos have an old version of ceph-deploy.  You will hate life if you try running a cluster with this outdated&nbsp;version!</em></p>
 </li>
 </ol>
-<div class="highlight"><pre><span></span>gpg --keyserver keys.gnupg.net --recv-keys E84AC2C0460F3994
-gpg -a --export E84AC2C0460F3994 | sudo apt-key add -
-echo &quot;deb http://download.ceph.com/debian-jewel jessie main&quot; | sudo tee -a /etc/apt/sources.list
+<div class="highlight"><pre><span></span>wget -q -O- &#39;https://download.ceph.com/keys/release.asc&#39; | sudo apt-key add -
+echo deb http://download.ceph.com/debian $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list
 sudo apt-get update
 sudo apt-get install ceph-deploy
 </pre></div>
 
 
 <ol>
-<li>Terraform&#8217;s <a href="https://www.terraform.io/docs/configuration/interpolation.html"><span class="caps">HCL</span> interpolation</a> supports path introspection, for example <code>${path.root}</code> which gives the path that Terraform was run from.  I used this to handily store hosts entries without tainting the local filesystem or heaven forbid the local hosts&nbsp;file.</li>
+<li>Terraform&#8217;s <a href="https://www.terraform.io/docs/configuration/interpolation.html"><span class="caps">HCL</span> interpolation</a> supports path introspection, for example <code>${path.root}</code> which gives the path that Terraform was run from.  I used this to handily store host entries without tainting the local filesystem or heaven forbid the local hosts&nbsp;file.</li>
 </ol>
 <div class="highlight"><pre><span></span>echo &#39;<span class="cp">${</span><span class="bp">self</span><span class="o">.</span><span class="n">ipv4_address</span><span class="cp">}</span> <span class="cp">${</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="cp">}</span> <span class="cp">${</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="cp">}</span>&#39; | tee -a <span class="cp">${</span><span class="n">path</span><span class="o">.</span><span class="n">root</span><span class="cp">}</span>/hosts_file
 </pre></div>
 
 
 <ol>
-<li>The <span class="caps">SSH</span> public keyfile generated remotely on the admin node comes with a comment field <code>cephalus@ceph-admin</code> but when I sent this over to the nodes and placed it in their <code>authorized_keys</code> file my connection from the admin node was blocked.  I stripped out the comment with the ssh-keygen command&#8217;s <code>-C</code> switch as so and was permitted&nbsp;entry.</li>
+<li>The <span class="caps">SSH</span> public keyfile generated remotely on the admin node comes with a comment field <code>cephalus@ceph-admin</code> but when I sent this over to the nodes and placed it in their <code>authorized_keys</code> file my connection from the admin node was blocked.  I stripped out the comment with the ssh-keygen command&#8217;s <code>-C</code> switch as so and was permitted entry.  <em>Update 1/19/18: Also specified a blank password with <code>-N ''</code> to eliminate the need for user&nbsp;interaction.</em></li>
 </ol>
 <div class="highlight"><pre><span></span>ssh-keygen -t rsa -b 4096 -f /home/<span class="cp">${</span><span class="n">var</span><span class="o">.</span><span class="n">admin_user</span><span class="cp">}</span>/.ssh/id_rsa -N &#39;&#39; -C &#39;&#39;
 </pre></div>

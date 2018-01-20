@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content=" Posts tagged with collaboration" />
+    <meta name="description" content=" Posts tagged with version" />
     <meta name="author" content="Travis Mattera" />
     <meta name="generator" content="Pelican (VoidyBootstrap theme)" />
 
-    <title>Tag:collaboration - Pillow Talk</title>
+    <title>Tag:version - Pillow Talk</title>
 
    
         <link rel="stylesheet"
@@ -71,15 +71,15 @@
     <li><a href="../" title="Home" rel="home">
 		<i class="fa fa-home fa-fw fa-lg"></i> </a></li>
     <li>Tags </li>
-    <li class="active">collaboration</li>
+    <li class="active">version</li>
 </ol>
     <article>
 <abbr class="article-header-date">
-  Sat 04 November 2017
+  Tue 16 January 2018
 </abbr> <h1>
-  <a href="../bare-metal-packets.html" rel="bookmark"
-     title="Permalink to Bare Metal Packets">
-    Bare Metal&nbsp;Packets
+  <a href="../ceph-storage-cluster-on-digital-ocean-using-terraform-part-3.html" rel="bookmark"
+     title="Permalink to Ceph Storage Cluster on Digital Ocean Using Terraform (Part 3)">
+    Ceph Storage Cluster on Digital Ocean Using Terraform (Part&nbsp;3)
   </a>
 </h1><div class="article-header-info">
   <p>
@@ -91,18 +91,64 @@
   </p>
 </div> <!-- /.article-header-info -->
       <div class="summary">
-		<p>I&#8217;ve been playing around with various cloud providers over the last couple months and can definitely attest that the experiences are <strong>different</strong>.  I recently got an account with <a href="https://packet.net" title="https://packet.net">Packet.net</a>, who granted me access after quick follow-up email from a support team member.  I had to lodge a credit card account with them but I was also granted $25 in&nbsp;credit.</p>
-<p>Immediately upon entering the site I&#8217;m prompted to start a project and moreover to invite collaborators to share&nbsp;access.</p>
-<p>By the time I get to starting a machine I&#8217;m taken with the way the <span class="caps">UI</span> feels clean and simple, like DigitalOcean or Vultr.  Then I clicked the <a href="https://www.packet.net/bare-metal/" title="https://www.packet.net/bare-metal/">small print</a> next to the <strong>Type</strong> selection to help explain the rather vague&nbsp;listing: </p>
-<p><img alt="server types" src="../images/packet-net-server-types.png"></p>
-<p>Now I&#8217;m transported to an info page on Packet&#8217;s metal minions.  This feels like checking out hotrods in a custom car shop.  Is it already upon us? That longing for the thrill of a humming electromechanical machine over the quietude of virtualized digitization?  Or maybe it&#8217;s just the imagining of the hulking beast growling at the other end of my ssh tunnel, what with 96 physical 2GHz cores* strapped to <span class="caps">128GB</span> <span class="caps">RAM</span> and <span class="caps">250GB</span> <span class="caps">SSD</span> not to mention 20GbE network&nbsp;connectivity.</p>
-<blockquote>
-<p><em>* that&#8217;s the Type 2A:  an <span class="caps">ARMV8</span> for $0.50 and hour, complete with 2 x <a href="http://www.cavium.com/ThunderX_ARM_Processors.html" title="http://www.cavium.com/ThunderX_ARM_Processors.html">Cavium ThunderX</a> processors-worth of&nbsp;action.</em></p>
-</blockquote>
-<p><img alt="server spec" src="../images/packet-net-server-desc.png"></p>
-<hr>
-<p>I started right in with a Type 0 mini running NixOS.  It took a couple minutes&#8230; then a couple minutes …</p>
-		<p class="content-emphasis"><a href="../bare-metal-packets.html">
+		<p>This <a href="https://github.com/haggishunk/ceph-digitalocean">Ceph project</a> is almost finished.  The terraform code now sets out properly configured servers ready for ceph-deploy to do its work, which sets me up nicely to perform a&nbsp;demo.</p>
+<p><img alt="squid" src="https://cdn.brainpop.com/science/diversityoflife/giantsquid/screenshot1.png"></p>
+<p>A basic demo script would go as such after connecting to <code>ceph-admin</code>:</p>
+<p>Designate a cluster monitor.  In production use one would deploy 3 or more but this is a simple&nbsp;demo.</p>
+<div class="highlight"><pre><span></span>ceph-deploy new ceph-1
+</pre></div>
+
+
+<p>Add these two lines to <code>ceph.conf</code> to inform the cluster which network to use for what communication.  Monitors like to talk on the public network, while the OSDs&#8217; heartbeat traffic is offloaded to the private&nbsp;network.</p>
+<div class="highlight"><pre><span></span>public network = 0.0.0.0/0
+private network = 10.138.0.0/16
+</pre></div>
+
+
+<p>Install ceph on each of the&nbsp;nodes.</p>
+<div class="highlight"><pre><span></span>ceph-deploy install ceph-1 ceph-2 ceph-3
+</pre></div>
+
+
+<p>Spin up the&nbsp;monitor</p>
+<div class="highlight"><pre><span></span>ceph-deploy mon create-initial
+</pre></div>
+
+
+<p>Distribute&nbsp;keys</p>
+<div class="highlight"><pre><span></span>ceph-deploy admin ceph-1 ceph-2 ceph-3
+</pre></div>
+
+
+<p>Rev up the OSDs which are the nodes with extra storage&nbsp;attached.</p>
+<div class="highlight"><pre><span></span>ceph-deploy osd create ceph-1:sda ceph-2:sda ceph-3:sda
+</pre></div>
+
+
+<p>At this point you should check the health of your&nbsp;cluster.</p>
+<div class="highlight"><pre><span></span>ssh ceph-1 sudo ceph health
+
+HEALTH OK
+</pre></div>
+
+
+<p>Or more&nbsp;verbosely,</p>
+<div class="highlight"><pre><span></span>ssh ceph-1 sudo ceph -s
+
+    cluster 0006732f-d4d2-4377-9afb-85d59175db6f
+     health HEALTH_OK
+     monmap e1: 1 mons at {ceph-2=165.227.5.141:6789/0}
+            election epoch 3, quorum 0 ceph-2
+     osdmap e14: 3 osds: 3 up, 3 in
+            flags sortbitwise,require_jewel_osds
+      pgmap v26: 64 pgs, 1 pools, 0 bytes data, 0 objects
+            101 MB used, 15225 MB / 15326 MB avail
+                  64 active+clean
+</pre></div>
+
+
+<p>Before designating a Rados object storage …</p>
+		<p class="content-emphasis"><a href="../ceph-storage-cluster-on-digital-ocean-using-terraform-part-3.html">
 			Read more... <i class="fa fa-arrow-circle-right fa-fw fa-lg"></i> 
 		</a></p>
       </div>    </article>
