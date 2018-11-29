@@ -19,7 +19,7 @@ I started with a basic google search for "business cards".
 
 So here's what I'm looking at putting on my card:
 
-![biz card]({filename}/images/bizcard.png)
+<img src="/images/bizcard.png" style="width: 80%; border: 2px solid black">
 
 Simple.  Black & white, no image or graphic.
 

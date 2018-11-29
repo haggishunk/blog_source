@@ -3,7 +3,7 @@ Date: 2017-10-08
 Tags: paas,dokku,terraform,automation
 Category: blog
 
-Tonight I can sleep soundly knowing that a very special little application is running out there on a virtual machine.  Check it out at [helloclock.mypaas.pantageo.us](http://helloclock.mypaas.pantageo.us).  I will admit it's not the most awesome thing ever, but if for some reason you cannot trust any of your timepieces yet you happen to have a browser (or [curl](https://curl.haxx.se)) this little ruby-on-rails app will let you know just how late you are.
+Tonight I can sleep soundly knowing that a very special little application is running out there on a virtual machine.  Check it out at [helloclock.mypaas.enjoyingmy.coffee](http://helloclock.mypaas.enjoyingmy.coffee).  I will admit it's not the most awesome thing ever, but if for some reason you cannot trust any of your timepieces yet you happen to have a browser (or [curl](https://curl.haxx.se)) this little ruby-on-rails app will let you know just how late you are.
 
 Under the hood I have [terraform](https://www.terraform.io) spinning up a droplet (VM instance) on DigitalOcean and registering a DNS alias under GoogleCloud pointing to that machine.  Terraform also installs [Dokku](https://github.com/dokku/dokku) which is an open source PaaS tool.  Visit my github repo [haggishunk/proj_mypaas](https://github.com/haggishunk/proj_mypaas) for more details.
 
@@ -81,7 +81,7 @@ echo "dokku dokku/web_config boolean false" | debconf-set-selections
 echo "dokku dokku/vhost_enable boolean true" | debconf-set-selections
 echo "dokku dokku/key_file string /root/.ssh/id_rsa.pub" | debconf-set-selections
 # ***EDIT THE hostname string BELOW WITH YOUR DOMAIN NAME***
-echo "dokku dokku/hostname string mypaas.pantageo.us" | debconf-set-selections
+echo "dokku dokku/hostname string mypaas.enjoyingmy.coffee" | debconf-set-selections
 
 apt-get install -qq -y --allow-unauthenticated dokku
 dokku plugin:install-dependencies --core
@@ -94,7 +94,7 @@ I wasn't able to get a solid app pushed via terraform's `local-exec`, so I ran t
 
 git clone git@github.com:heroku/ruby-rails-sample.git
 cd ruby-rails-sample
-git remote add dokku dokku@mypaas.pantageo.us:helloclock
+git remote add dokku dokku@mypaas.enjoyingmy.coffee:helloclock
 git push dokku master
 ```
 
